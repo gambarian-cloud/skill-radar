@@ -1,0 +1,77 @@
+[
+  {
+    "id": "reddit-001",
+    "subreddit": "ClaudeCode",
+    "title": "Anthropic skills plus Boris-style worktrees is still the cleanest baseline",
+    "text": "A useful pairing right now is anthropics/skills together with obra/superpowers. The official repo gives capability truth, while the practitioner pack sharpens debugging, planning, and worktree habits.",
+    "url": "https://www.reddit.com/r/ClaudeCode/comments/mock1/anthropic_skills_worktrees/",
+    "author": "builder_one",
+    "publishedAt": "2026-03-07T08:30:00Z",
+    "metadata": {
+      "provider": "mock",
+      "score": 12,
+      "comments": 9,
+      "flair": "Discussion"
+    }
+  },
+  {
+    "id": "reddit-002",
+    "subreddit": "LLMDevs",
+    "title": "openai/skills versus anthropics/skills for shared agent baselines",
+    "text": "We tested openai/skills and anthropics/skills side by side. OpenAI gives the Codex-side artifact, Anthropic gives the Claude-side artifact, and both are more useful when a Telegram scout source surfaced them first.",
+    "url": "https://www.reddit.com/r/LLMDevs/comments/mock2/openai_skills_vs_anthropics_skills/",
+    "author": "workflow_dev",
+    "publishedAt": "2026-03-07T07:45:00Z",
+    "metadata": {
+      "provider": "mock",
+      "score": 18,
+      "comments": 11,
+      "flair": "Discussion"
+    }
+  },
+  {
+    "id": "reddit-003",
+    "subreddit": "codex",
+    "title": "Codex gets better once verification is treated as a hard rule",
+    "text": "The best shift for Codex was not a new model, but one verification-before-completion rule plus cleaner worktree isolation. That made openai/codex sessions much less chaotic.",
+    "url": "https://www.reddit.com/r/codex/comments/mock3/codex_verification_rule/",
+    "author": "terminal_worker",
+    "publishedAt": "2026-03-07T06:10:00Z",
+    "metadata": {
+      "provider": "mock",
+      "score": 7,
+      "comments": 4,
+      "flair": "Discussion"
+    }
+  },
+  {
+    "id": "reddit-004",
+    "subreddit": "ClaudeAI",
+    "title": "MCP proxy logs made Claude Code debugging much less blind",
+    "text": "A simple MCP proxy log changed how I debug Claude Code sessions. The artifact was not the post itself, but the repeatable workflow: capture tool calls first, then diagnose the failure.",
+    "url": "https://www.reddit.com/r/ClaudeAI/comments/mock4/mcp_proxy_logs/",
+    "author": "steady_ops",
+    "publishedAt": "2026-03-07T05:00:00Z",
+    "metadata": {
+      "provider": "mock",
+      "score": 9,
+      "comments": 5,
+      "flair": "Discussion"
+    }
+  },
+  {
+    "id": "reddit-005",
+    "subreddit": "ClaudeAI",
+    "title": "Question about running Claude Code on several laptops",
+    "text": "I am trying to understand if Claude Code sessions can run on more than one machine at once and how people keep context in sync.",
+    "url": "https://www.reddit.com/r/ClaudeAI/comments/mock5/claude_code_multi_machine/",
+    "author": "ops_question",
+    "publishedAt": "2026-03-07T04:00:00Z",
+    "metadata": {
+      "provider": "mock",
+      "score": 1,
+      "comments": 1,
+      "flair": "Question"
+    }
+  }
+]

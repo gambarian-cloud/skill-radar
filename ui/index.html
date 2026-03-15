@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Signal Scout</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-bg"></div>
+    <main class="shell">
+      <header class="hero">
+        <div>
+          <p class="kicker">Signal Scout</p>
+          <h1>Skill Radar</h1>
+          <p class="subtitle">Clear results for humans, not debug dumps.</p>
+        </div>
+        <div class="status-pill" id="statusPill">Ready</div>
+      </header>
+
+      <section class="summary-card">
+        <h2>What Happened</h2>
+        <div id="summaryLines" class="summary-lines"></div>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h3>Digest</h3>
+          <p>Generate your daily signal summary.</p>
+          <div class="actions-row">
+            <button data-action="digest-demo">Demo Digest</button>
+            <button data-action="digest-auto" class="primary">Auto Digest</button>
+            <button data-action="open-digest">Open Digest</button>
+          </div>
+          <div id="digestPreview" class="digest-preview"></div>
+        </article>
+
+        <article class="card">
+          <h3>Lookup</h3>
+          <p>Ask one focused question.</p>
+          <div class="input-row">
+            <input id="lookupInput" placeholder="Example: figma mcp" />
+            <button data-action="lookup" class="primary">Run Lookup</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Profile</h3>
+          <p>Set your domains and risk level.</p>
+          <div id="lensesGrid" class="lenses-grid"></div>
+          <div class="input-row">
+            <select id="riskSelect">
+              <option value="safe">safe</option>
+              <option value="balanced" selected>balanced</option>
+              <option value="experimental">experimental</option>
+            </select>
+            <button data-action="profile-show">Show Profile</button>
+            <button data-action="profile-save" class="primary">Save Profile</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>System</h3>
+          <p>Keep installation and health checks in one place.</p>
+          <div class="actions-row">
+            <button data-action="install">Install / Update</button>
+            <button data-action="health-check" class="primary">Health Check</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="logs-wrap">
+        <label class="log-toggle">
+          <input id="showLogs" type="checkbox" />
+          Show Technical Log
+        </label>
+        <pre id="logBox" class="log-box hidden"></pre>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

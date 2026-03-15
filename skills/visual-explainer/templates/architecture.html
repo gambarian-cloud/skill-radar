@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Architecture — Reference Template</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ─── Design tokens ─────────────────────────────────────────────────── */
+:root {
+  --terra-100: #fdf3ee;
+  --terra-200: #f5ddd0;
+  --terra-300: #e8b99a;
+  --terra-400: #d4845a;
+  --terra-500: #b85c2c;
+  --terra-600: #8f3f18;
+
+  --sage-100: #f2f5f0;
+  --sage-200: #d8e4d2;
+  --sage-300: #a9c49e;
+  --sage-400: #6f9e61;
+  --sage-500: #3f7030;
+  --sage-600: #264d1a;
+
+  --sand-50:  #faf8f4;
+  --sand-100: #f3ede3;
+  --sand-200: #e5d9c7;
+  --sand-700: #6b5b45;
+  --sand-900: #2c2218;
+
+  --ink:      #1c1612;
+  --ink-soft: #4a3e30;
+  --muted:    #8a7765;
+  --border:   #ddd0be;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 2px 12px rgba(28,22,18,.08), 0 1px 3px rgba(28,22,18,.05);
+  --shadow-hero: 0 4px 24px rgba(28,22,18,.12), 0 2px 6px rgba(28,22,18,.06);
+
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  /* stagger base */
+  --stagger-step: 80ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --terra-100: #2a1a10;
+    --terra-200: #3d2415;
+    --terra-300: #7a4425;
+    --terra-400: #c2703e;
+    --terra-500: #e08c5a;
+    --terra-600: #f0b48a;
+
+    --sage-100: #131c10;
+    --sage-200: #1e2e19;
+    --sage-300: #3a5c30;
+    --sage-400: #5c8f4e;
+    --sage-500: #84c272;
+    --sage-600: #aad898;
+
+    --sand-50:  #181310;
+    --sand-100: #221a13;
+    --sand-200: #2e231a;
+    --sand-700: #b09070;
+    --sand-900: #f0e8dc;
+
+    --ink:      #f0e8dc;
+    --ink-soft: #c8b89a;
+    --muted:    #9a8870;
+    --border:   #3a2e22;
+
+    --shadow-card: 0 2px 12px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.2);
+    --shadow-hero: 0 4px 24px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.25);
+  }
+}
+
+/* ─── Reset & base ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--sand-50);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ─── Asymmetric background atmosphere ─────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  /* off-center gradient mesh — weighted toward top-right */
+  background:
+    radial-gradient(ellipse 70% 55% at 78% 12%, rgba(212,132,90,.13) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 18% 75%, rgba(111,158,97,.10) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 30% at 55% 90%, rgba(212,132,90,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 5%  20%, rgba(111,158,97,.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Layout shell ──────────────────────────────────────────────────── */
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* ─── Header ────────────────────────────────────────────────────────── */
+.page-header {
+  margin-bottom: 40px;
+}
+
+.page-header h1 {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.page-header .subtitle {
+  font-size: .95rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.page-header .tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  background: var(--terra-200);
+  color: var(--terra-600);
+  border: 1px solid var(--terra-300);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  margin-bottom: 10px;
+  letter-spacing: .04em;
+}
+
+/* ─── Animation ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .fade-in {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fadeUp .5s ease forwards;
+    animation-delay: calc(var(--i, 0) * var(--stagger-step));
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* ─── Section card base ─────────────────────────────────────────────── */
+.card {
+  background: var(--sand-100);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+/* depth tiers */
+.card--hero {
+  background: var(--sand-50);
+  box-shadow: var(--shadow-hero);
+  border-color: var(--terra-300);
+}
+
+.card--default { /* inherits base */ }
+
+.card--recessed {
+  background: var(--sand-200);
+  box-shadow: none;
+  border-style: dashed;
+  border-color: var(--sand-200);
+}
+
+/* colored accent border (left stripe) */
+.card--accent-terra  { border-left: 4px solid var(--terra-400); }
+.card--accent-sage   { border-left: 4px solid var(--sage-400);  }
+.card--accent-sand   { border-left: 4px solid var(--sand-700);  }
+.card--accent-orange { border-left: 4px solid #c4722a;          }
+
+/* dot label */
+.card-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.card-label__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot--terra  { background: var(--terra-400); }
+.dot--sage   { background: var(--sage-400);  }
+.dot--sand   { background: var(--sand-700);  }
+.dot--orange { background: #c4722a;          }
+.dot--red    { background: #c04040;          }
+
+.card-label__text {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+/* card title */
+.card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.card-desc {
+  font-size: .875rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+/* ─── Chip / pill ───────────────────────────────────────────────────── */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.chip {
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--sand-50);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.chip--terra {
+  background: var(--terra-100);
+  border-color: var(--terra-300);
+  color: var(--terra-600);
+}
+
+.chip--sage {
+  background: var(--sage-100);
+  border-color: var(--sage-300);
+  color: var(--sage-600);
+}
+
+/* ─── Main grid layout ──────────────────────────────────────────────── */
+.arch-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0; /* gaps handled by section spacing */
+}
+
+/* ─── Row: input sources (hero tier) ───────────────────────────────── */
+.sources-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 0;
+}
+
+/* ─── Vertical arrow between rows ──────────────────────────────────── */
+.v-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.v-arrow svg {
+  width: 28px;
+  height: 36px;
+  overflow: visible;
+}
+
+/* ─── Gateway section ───────────────────────────────────────────────── */
+.gateway-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ─── Processing pipeline ───────────────────────────────────────────── */
+.pipeline-section {
+  background: var(--sand-100);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-card);
+}
+
+.pipeline-section .card-label { margin-bottom: 16px; }
+
+.pipeline-steps {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.pipeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.step-box {
+  background: var(--sand-50);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: .8rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: var(--shadow-card);
+}
+
+.step-box--terra {
+  border-color: var(--terra-300);
+  background: var(--terra-100);
+  color: var(--terra-600);
+}
+
+.step-num {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  color: var(--muted);
+}
+
+.pipe-arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.pipe-arrow svg {
+  width: 22px;
+  height: 16px;
+}
+
+/* parallel branch */
+.parallel-branch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 110px;
+  flex-shrink: 0;
+}
+
+.parallel-label {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: .05em;
+}
+
+/* ─── Database row ──────────────────────────────────────────────────── */
+.db-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ─── Output row (three columns) ────────────────────────────────────── */
+.output-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.output-card {
+  text-align: center;
+}
+
+.output-icon {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  display: block;
+  line-height: 1;
+}
+
+/* ─── Legend ────────────────────────────────────────────────────────── */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .8rem;
+  color: var(--muted);
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.swatch--terra  { background: var(--terra-400); }
+.swatch--sage   { background: var(--sage-400);  }
+.swatch--sand   { background: var(--sand-700);  }
+.swatch--orange { background: #c4722a;          }
+.swatch--dashed {
+  background: transparent;
+  border: 2px dashed var(--muted);
+  height: 0;
+  border-radius: 0;
+}
+
+/* ─── Callout (recessed) ────────────────────────────────────────────── */
+.callout {
+  background: var(--sage-100);
+  border: 1px dashed var(--sage-300);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-top: 14px;
+}
+
+.callout p {
+  font-size: .85rem;
+  color: var(--sage-600);
+  line-height: 1.6;
+}
+
+.callout strong {
+  font-weight: 600;
+  color: var(--sage-500);
+}
+
+/* ─── Section spacing wrapper ───────────────────────────────────────── */
+.arch-section {
+  margin-bottom: 6px; /* arrows provide visual separation */
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .sources-row,
+  .gateway-row,
+  .output-row,
+  .db-row {
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline-steps {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pipe-arrow svg {
+    transform: rotate(90deg);
+  }
+
+  .parallel-branch {
+    flex-direction: row;
+    min-width: unset;
+    flex-wrap: wrap;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <!-- ── Header ──────────────────────────────────────────────────────── -->
+  <header class="page-header fade-in" style="--i:0">
+    <div class="tag">architecture · reference template</div>
+    <h1>Signal Ingestion System</h1>
+    <p class="subtitle">End-to-end pipeline from raw inputs to agent tools, actions, and dashboard</p>
+  </header>
+
+  <div class="arch-grid">
+
+    <!-- ── 1. Input Sources (hero tier) ──────────────────────────────── -->
+    <div class="arch-section fade-in" style="--i:1">
+      <div class="sources-row">
+
+        <div class="card card--hero card--accent-terra">
+          <div class="card-label">
+            <span class="card-label__dot dot--terra"></span>
+            <span class="card-label__text">origin · input</span>
+          </div>
+          <div class="card-title">Slack</div>
+          <div class="card-desc">Workspace events, channel messages, reactions, and thread activity streamed via Events API.</div>
+          <div class="chip-row">
+            <span class="chip chip--terra">events-api</span>
+            <span class="chip chip--terra">webhooks</span>
+          </div>
+        </div>
+
+        <div class="card card--hero card--accent-terra">
+          <div class="card-label">
+            <span class="card-label__dot dot--terra"></span>
+            <span class="card-label__text">origin · input</span>
+          </div>
+          <div class="card-title">GitHub</div>
+          <div class="card-desc">Issues, pull requests, reviews, releases, and discussion events from watched repositories.</div>
+          <div class="chip-row">
+            <span class="chip chip--terra">webhooks</span>
+            <span class="chip chip--terra">REST · GraphQL</span>
+          </div>
+        </div>
+
+        <div class="card card--hero card--accent-terra">
+          <div class="card-label">
+            <span class="card-label__dot dot--terra"></span>
+            <span class="card-label__text">origin · input</span>
+          </div>
+          <div class="card-title">Email</div>
+          <div class="card-desc">Inbound IMAP polling plus forwarding rules for digest subscriptions and notification threads.</div>
+          <div class="chip-row">
+            <span class="chip chip--terra">IMAP</span>
+            <span class="chip chip--terra">MIME parse</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Arrow 1 ────────────────────────────────────────────────────── -->
+    <div class="v-arrow fade-in" style="--i:2" aria-hidden="true">
+      <svg viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="14" y1="0" x2="14" y2="26" stroke="var(--terra-300)" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="14,36 7,22 21,22" fill="var(--terra-300)"/>
+      </svg>
+    </div>
+
+    <!-- ── 2. Gateway Layer ───────────────────────────────────────────── -->
+    <div class="arch-section fade-in" style="--i:3">
+      <div class="gateway-row">
+
+        <div class="card card--default card--accent-orange">
+          <div class="card-label">
+            <span class="card-label__dot dot--orange"></span>
+            <span class="card-label__text">gateway · routing</span>
+          </div>
+          <div class="card-title">Router</div>
+          <div class="card-desc">Source-aware dispatch. Maps incoming event types to normalizer handlers. Applies per-source rate limits and back-pressure.</div>
+          <div class="chip-row">
+            <span class="chip">rate-limit</span>
+            <span class="chip">dispatch</span>
+            <span class="chip">retry</span>
+          </div>
+        </div>
+
+        <div class="card card--default card--accent-orange">
+          <div class="card-label">
+            <span class="card-label__dot dot--orange"></span>
+            <span class="card-label__text">gateway · transport</span>
+          </div>
+          <div class="card-title">HTTP Server</div>
+          <div class="card-desc">Receives webhook payloads from Slack and GitHub. Verifies HMAC signatures. Queues valid events for the Router.</div>
+          <div class="chip-row">
+            <span class="chip">HMAC verify</span>
+            <span class="chip">queue</span>
+            <span class="chip">TLS</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Arrow 2 ────────────────────────────────────────────────────── -->
+    <div class="v-arrow fade-in" style="--i:4" aria-hidden="true">
+      <svg viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="14" y1="0" x2="14" y2="26" stroke="var(--sand-700)" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="14,36 7,22 21,22" fill="var(--sand-700)"/>
+      </svg>
+    </div>
+
+    <!-- ── 3. Processing Pipeline ─────────────────────────────────────── -->
+    <div class="arch-section pipeline-section card--accent-sand fade-in" style="--i:5">
+      <div class="card-label">
+        <span class="card-label__dot dot--sand"></span>
+        <span class="card-label__text">processing pipeline</span>
+      </div>
+
+      <div class="pipeline-steps">
+
+        <div class="pipeline-step">
+          <div class="step-num">01</div>
+          <div class="step-box">Pre-filter</div>
+        </div>
+
+        <div class="pipe-arrow" aria-hidden="true">
+          <svg viewBox="0 0 22 16" fill="none">
+            <line x1="0" y1="8" x2="16" y2="8" stroke="var(--border)" stroke-width="2"/>
+            <polygon points="22,8 14,3 14,13" fill="var(--border)"/>
+          </svg>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-num">02</div>
+          <div class="step-box">Relevance</div>
+        </div>
+
+        <div class="pipe-arrow" aria-hidden="true">
+          <svg viewBox="0 0 22 16" fill="none">
+            <line x1="0" y1="8" x2="16" y2="8" stroke="var(--border)" stroke-width="2"/>
+            <polygon points="22,8 14,3 14,13" fill="var(--border)"/>
+          </svg>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-num">03</div>
+          <div class="step-box">Classify</div>
+        </div>
+
+        <div class="pipe-arrow" aria-hidden="true">
+          <svg viewBox="0 0 22 16" fill="none">
+            <line x1="0" y1="8" x2="16" y2="8" stroke="var(--border)" stroke-width="2"/>
+            <polygon points="22,8 14,3 14,13" fill="var(--border)"/>
+          </svg>
+        </div>
+
+        <!-- parallel branch: Embed/Enrich runs in parallel -->
+        <div class="parallel-branch">
+          <div class="parallel-label">parallel</div>
+          <div class="step-box step-box--terra" style="text-align:center; margin-bottom:6px">Embed</div>
+          <div class="step-box step-box--terra" style="text-align:center">Enrich</div>
+        </div>
+
+        <div class="pipe-arrow" aria-hidden="true">
+          <svg viewBox="0 0 22 16" fill="none">
+            <line x1="0" y1="8" x2="16" y2="8" stroke="var(--border)" stroke-width="2"/>
+            <polygon points="22,8 14,3 14,13" fill="var(--border)"/>
+          </svg>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-num">05</div>
+          <div class="step-box">Cluster</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Arrow 3 ────────────────────────────────────────────────────── -->
+    <div class="v-arrow fade-in" style="--i:6" aria-hidden="true">
+      <svg viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="14" y1="0" x2="14" y2="26" stroke="var(--sand-700)" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="14,36 7,22 21,22" fill="var(--sand-700)"/>
+      </svg>
+    </div>
+
+    <!-- ── 4. Database ────────────────────────────────────────────────── -->
+    <div class="arch-section fade-in" style="--i:7">
+      <div class="db-row">
+
+        <div class="card card--default card--accent-sage">
+          <div class="card-label">
+            <span class="card-label__dot dot--sage"></span>
+            <span class="card-label__text">storage · primary</span>
+          </div>
+          <div class="card-title">feedback_items</div>
+          <div class="card-desc">Normalized event records with source metadata, relevance scores, embeddings, and audit trail.</div>
+          <div class="chip-row">
+            <span class="chip chip--sage">PostgreSQL</span>
+            <span class="chip chip--sage">pgvector</span>
+          </div>
+        </div>
+
+        <div class="card card--default card--accent-sage">
+          <div class="card-label">
+            <span class="card-label__dot dot--sage"></span>
+            <span class="card-label__text">storage · derived</span>
+          </div>
+          <div class="card-title">clusters</div>
+          <div class="card-desc">Deduplicated signal groups and trend summaries. Refreshed after each pipeline run. Used by downstream consumers.</div>
+          <div class="chip-row">
+            <span class="chip chip--sage">PostgreSQL</span>
+            <span class="chip chip--sage">materialized</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Arrow 4 ────────────────────────────────────────────────────── -->
+    <div class="v-arrow fade-in" style="--i:8" aria-hidden="true">
+      <svg viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="14" y1="0" x2="14" y2="26" stroke="var(--sage-400)" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="14,36 7,22 21,22" fill="var(--sage-400)"/>
+      </svg>
+    </div>
+
+    <!-- ── 5. Outputs (three-column) ──────────────────────────────────── -->
+    <div class="arch-section fade-in" style="--i:9">
+      <div class="output-row">
+
+        <div class="card card--default card--accent-sage output-card">
+          <div class="card-label" style="justify-content:center">
+            <span class="card-label__dot dot--sage"></span>
+            <span class="card-label__text">output · tools</span>
+          </div>
+          <div class="card-title">Agent Tools</div>
+          <div class="card-desc">MCP endpoints exposing search, lookup, and cluster queries to Claude Code and Codex agents.</div>
+          <div class="chip-row" style="justify-content:center">
+            <span class="chip chip--sage">MCP</span>
+            <span class="chip chip--sage">REST</span>
+          </div>
+        </div>
+
+        <div class="card card--default card--accent-terra output-card">
+          <div class="card-label" style="justify-content:center">
+            <span class="card-label__dot dot--terra"></span>
+            <span class="card-label__text">output · actions</span>
+          </div>
+          <div class="card-title">Actions</div>
+          <div class="card-desc">Triggered automations: Slack notifications, GitHub issue creation, digest email delivery.</div>
+          <div class="chip-row" style="justify-content:center">
+            <span class="chip chip--terra">webhooks</span>
+            <span class="chip chip--terra">cron</span>
+          </div>
+        </div>
+
+        <div class="card card--default card--accent-sand output-card">
+          <div class="card-label" style="justify-content:center">
+            <span class="card-label__dot dot--sand"></span>
+            <span class="card-label__text">output · ui</span>
+          </div>
+          <div class="card-title">Dashboard</div>
+          <div class="card-desc">Read-only web view of recent signals, cluster trends, and pipeline health metrics.</div>
+          <div class="chip-row" style="justify-content:center">
+            <span class="chip">SSR</span>
+            <span class="chip">WebSocket</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Callout: multi-tenant architecture (recessed) ─────────────── -->
+    <div class="fade-in" style="--i:10; margin-top: 24px;">
+      <div class="callout">
+        <div class="card-label" style="margin-bottom:10px">
+          <span class="card-label__dot dot--sage"></span>
+          <span class="card-label__text">design note · multi-tenant</span>
+        </div>
+        <p>
+          <strong>Tenant isolation</strong> is enforced at the Router layer. Each source connection carries a
+          <code style="font-family: var(--font-mono); font-size:.82em">tenant_id</code> claim; all downstream records
+          are partitioned by it. The shared pipeline infrastructure never mixes tenant data — cluster computation,
+          embeddings, and action dispatch are all scoped per tenant before touching storage.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── Legend ──────────────────────────────────────────────────────── -->
+    <div class="legend fade-in" style="--i:11">
+      <div class="legend-item">
+        <div class="legend-swatch swatch--terra"></div>
+        <span>Input sources / Outputs</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch swatch--orange"></div>
+        <span>Gateway layer</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch swatch--sand"></div>
+        <span>Processing pipeline</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch swatch--sage"></div>
+        <span>Storage / Agent tools</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch swatch--dashed"></div>
+        <span>Design note / callout</span>
+      </div>
+    </div>
+
+  </div><!-- /arch-grid -->
+</div><!-- /page -->
+</body>
+</html>

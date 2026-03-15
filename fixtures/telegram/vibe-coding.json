@@ -1,0 +1,56 @@
+﻿[
+  {
+    "id": "vibe-001",
+    "hoursAgo": 2,
+    "url": "https://t.me/example/vibe-001",
+    "text": "Codex-style skills are becoming the missing layer for reusable agent workflows. The practical pattern is to keep the planner lean, move deterministic steps into scripts, and gate changes with evals before deploy. If you are building internal agents on Next.js or Vercel, treat skills and eval suites as release infrastructure, not documentation."
+  },
+  {
+    "id": "vibe-002",
+    "hoursAgo": 4,
+    "url": "https://t.me/example/vibe-002",
+    "text": "Useful pattern for public Telegram monitoring: use an Apify actor or scheduled dataset feed instead of brittle HTML scraping, then normalize every message into a single JSON shape. That lets you score relevance once and reuse the same pipeline later for X, Reddit, or RSS."
+  },
+  {
+    "id": "vibe-003",
+    "hoursAgo": 6,
+    "url": "https://t.me/example/vibe-003",
+    "text": "React 19 plus Next.js 15 is getting more interesting for internal tools: streaming server components, optimistic actions, and smaller client islands make admin surfaces faster to iterate on. Worth saving if you are planning a dashboard refresh but not urgent unless you are already touching frontend surfaces."
+  },
+  {
+    "id": "vibe-004",
+    "hoursAgo": 9,
+    "url": "https://t.me/example/vibe-004",
+    "text": "Teams shipping Claude or Codex agents are starting to separate prompt experiments from reliability gates. The better pattern is a small eval suite that runs on every prompt or tool change, with failure buckets for routing, hallucination, and unsafe actions. This is boring infrastructure, but it compounds."
+  },
+  {
+    "id": "vibe-005",
+    "hoursAgo": 11,
+    "url": "https://t.me/example/vibe-005",
+    "text": "Reminder for Next.js teams: if your Anthropic or other provider key can ever leak into the browser bundle, assume the design is wrong. Put model calls behind server-only routes or server actions, keep scopes narrow, and make preview deployments safe by default."
+  },
+  {
+    "id": "vibe-006",
+    "hoursAgo": 13,
+    "url": "https://t.me/example/vibe-006",
+    "text": "Shipping automation safely is mostly about boring tooling: lint the generated artifacts, snapshot critical prompts, and make the deploy path cheap enough that people actually run it. Vercel preview plus a smoke eval can catch more regressions than another brainstorming session."
+  },
+  {
+    "id": "vibe-007",
+    "hoursAgo": 8,
+    "url": "https://t.me/example/vibe-007",
+    "text": "MacBook giveaway today. Subscribe, repost, and invite three friends to enter."
+  },
+  {
+    "id": "vibe-008",
+    "hoursAgo": 10,
+    "url": "https://t.me/example/vibe-008",
+    "text": "Teams shipping Claude or Codex agents are starting to separate prompt experiments from reliability gates. The better pattern is a small eval suite that runs on every prompt or tool change, with failure buckets for routing, hallucination, and unsafe actions. This is boring infrastructure, but it compounds."
+  },
+  {
+    "id": "vibe-009",
+    "hoursAgo": 30,
+    "url": "https://t.me/example/vibe-009",
+    "text": "Older note outside the last 24 hours about a new browser extension. Useful later, but it should not appear in today's digest."
+  }
+]

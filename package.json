@@ -1,0 +1,18 @@
+{
+  "name": "signal-scout",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "digest": "node --experimental-strip-types src/index.ts",
+    "digest:demo": "node --experimental-strip-types src/index.ts --mode mock",
+    "digest:live": "node --experimental-strip-types src/index.ts --mode live",
+    "audit:sources": "node --experimental-strip-types src/source-audit.ts",
+    "audit:baseline": "node --experimental-strip-types src/baseline-audit.ts",
+    "radar:profile": "node --experimental-strip-types src/radar-profile.ts",
+    "lookup": "node --experimental-strip-types src/lookup.ts",
+    "ui": "node scripts/skill-radar-ui-server.mjs",
+    "sync:agents": "node --experimental-strip-types scripts/sync-agent-assets.ts",
+    "test": "node --experimental-strip-types test/all-tests.ts"
+  }
+}

@@ -1,0 +1,190 @@
+[
+  {
+    "id": "openai-codex-2026-03-06",
+    "text": "openai/codex: Local coding agent workflow and approval model for real repositories. Adoption signals: 18500 stars, 1400 forks, 220 open issues, 310 subscribers. Last push: 2026-03-06. Topics: codex, cli, sandbox, approvals, worktrees.",
+    "url": "https://github.com/openai/codex",
+    "author": "openai",
+    "publishedAt": "2026-03-06T09:20:00Z",
+    "metadata": {
+      "repoFullName": "openai/codex",
+      "repoLabel": "OpenAI Codex",
+      "signalType": "repo-activity",
+      "stars": 18500,
+      "forks": 1400,
+      "openIssues": 220,
+      "subscribers": 310,
+      "pushedAt": "2026-03-06T09:20:00Z",
+      "releaseTag": "v0.4.0"
+    }
+  },
+  {
+    "id": "openai-skills-2026-03-06",
+    "text": "openai/skills: Official Codex-oriented skill catalog and patterns for reusable agent workflows. Adoption signals: 2400 stars, 180 forks, 28 open issues, 55 subscribers. Last push: 2026-03-06. Topics: skills, codex, agents, workflows.",
+    "url": "https://github.com/openai/skills",
+    "author": "openai",
+    "publishedAt": "2026-03-06T08:15:00Z",
+    "metadata": {
+      "repoFullName": "openai/skills",
+      "repoLabel": "OpenAI Skills",
+      "signalType": "repo-activity",
+      "stars": 2400,
+      "forks": 180,
+      "openIssues": 28,
+      "subscribers": 55,
+      "pushedAt": "2026-03-06T08:15:00Z"
+    }
+  },
+  {
+    "id": "anthropics-skills-2026-03-06",
+    "text": "anthropics/skills: Official Claude Code skills and plugin ecosystem examples. Adoption signals: 2100 stars, 150 forks, 34 open issues, 61 subscribers. Last push: 2026-03-06. Topics: claude code, skills, plugins, workflows.",
+    "url": "https://github.com/anthropics/skills",
+    "author": "anthropics",
+    "publishedAt": "2026-03-06T07:50:00Z",
+    "metadata": {
+      "repoFullName": "anthropics/skills",
+      "repoLabel": "Anthropic Skills",
+      "signalType": "repo-activity",
+      "stars": 2100,
+      "forks": 150,
+      "openIssues": 34,
+      "subscribers": 61,
+      "pushedAt": "2026-03-06T07:50:00Z"
+    }
+  },
+  {
+    "id": "vercel-labs-skills-2026-03-05",
+    "text": "vercel-labs/skills: Open installer and shared skill specification spanning Codex and Claude Code. Adoption signals: 1900 stars, 110 forks, 19 open issues, 43 subscribers. Last push: 2026-03-05. Topics: skills, installers, codex, claude code.",
+    "url": "https://github.com/vercel-labs/skills",
+    "author": "vercel-labs",
+    "publishedAt": "2026-03-05T18:25:00Z",
+    "metadata": {
+      "repoFullName": "vercel-labs/skills",
+      "repoLabel": "Vercel Labs Skills",
+      "signalType": "repo-activity",
+      "stars": 1900,
+      "forks": 110,
+      "openIssues": 19,
+      "subscribers": 43,
+      "pushedAt": "2026-03-05T18:25:00Z"
+    }
+  },
+  {
+    "id": "vercel-agent-skills-2026-03-05",
+    "text": "vercel-labs/agent-skills: Frontend and agent workflow skills that fit the Next.js and React side of the stack. Adoption signals: 1300 stars, 92 forks, 16 open issues, 31 subscribers. Last push: 2026-03-05. Topics: react, next.js, frontend, agents, skills.",
+    "url": "https://github.com/vercel-labs/agent-skills",
+    "author": "vercel-labs",
+    "publishedAt": "2026-03-05T16:40:00Z",
+    "metadata": {
+      "repoFullName": "vercel-labs/agent-skills",
+      "repoLabel": "Vercel Agent Skills",
+      "signalType": "repo-activity",
+      "stars": 1300,
+      "forks": 92,
+      "openIssues": 16,
+      "subscribers": 31,
+      "pushedAt": "2026-03-05T16:40:00Z"
+    }
+  },
+  {
+    "id": "obra-superpowers-2026-03-05",
+    "text": "obra/superpowers: High-signal community workflow pack for debugging, worktrees, TDD, and planning. Adoption signals: 4200 stars, 260 forks, 37 open issues, 88 subscribers. Last push: 2026-03-05. Topics: debugging, worktrees, tdd, planning, multi-agent workflows.",
+    "url": "https://github.com/obra/superpowers",
+    "author": "obra",
+    "publishedAt": "2026-03-05T14:10:00Z",
+    "metadata": {
+      "repoFullName": "obra/superpowers",
+      "repoLabel": "Obra Superpowers",
+      "signalType": "repo-activity",
+      "stars": 4200,
+      "forks": 260,
+      "openIssues": 37,
+      "subscribers": 88,
+      "pushedAt": "2026-03-05T14:10:00Z"
+    }
+  },
+  {
+    "id": "openai-symphony-2026-03-05",
+    "text": "openai/symphony: Agent orchestration framework for ticket-to-implementation workflows. Adoption signals: 3200 stars, 230 forks, 41 open issues, 74 subscribers. Last push: 2026-03-05. Topics: agents, orchestration, workflows, coding agents.",
+    "url": "https://github.com/openai/symphony",
+    "author": "openai",
+    "publishedAt": "2026-03-05T12:00:00Z",
+    "metadata": {
+      "repoFullName": "openai/symphony",
+      "repoLabel": "OpenAI Symphony",
+      "signalType": "repo-activity",
+      "stars": 3200,
+      "forks": 230,
+      "openIssues": 41,
+      "subscribers": 74,
+      "pushedAt": "2026-03-05T12:00:00Z"
+    }
+  },
+  {
+    "id": "apify-agent-skills-2026-03-04",
+    "text": "apify/agent-skills: Reusable skills for agents doing extraction, scraping, and automation work. Adoption signals: 980 stars, 76 forks, 14 open issues, 21 subscribers. Last push: 2026-03-04. Topics: agent skills, automation, extraction, scraping.",
+    "url": "https://github.com/apify/agent-skills",
+    "author": "apify",
+    "publishedAt": "2026-03-04T12:00:00Z",
+    "metadata": {
+      "repoFullName": "apify/agent-skills",
+      "repoLabel": "Apify Agent Skills",
+      "signalType": "repo-activity",
+      "stars": 980,
+      "forks": 76,
+      "openIssues": 14,
+      "subscribers": 21,
+      "pushedAt": "2026-03-04T12:00:00Z"
+    }
+  },
+  {
+    "id": "claude-code-best-practice-2026-03-03",
+    "text": "shanraisshan/claude-code-best-practice: Community best-practice repo for memory files, workflows, commands, and agent habits. Adoption signals: 1500 stars, 115 forks, 22 open issues, 33 subscribers. Last push: 2026-03-03. Topics: claude code, skills, memory, workflows.",
+    "url": "https://github.com/shanraisshan/claude-code-best-practice",
+    "author": "shanraisshan",
+    "publishedAt": "2026-03-03T13:30:00Z",
+    "metadata": {
+      "repoFullName": "shanraisshan/claude-code-best-practice",
+      "repoLabel": "Claude Code Best Practice",
+      "signalType": "repo-activity",
+      "stars": 1500,
+      "forks": 115,
+      "openIssues": 22,
+      "subscribers": 33,
+      "pushedAt": "2026-03-03T13:30:00Z"
+    }
+  },
+  {
+    "id": "aider-2026-03-02",
+    "text": "Aider-AI/aider: High-signal community repo for large-codebase coding-agent ergonomics, repo mapping, and review workflows. Adoption signals: 28400 stars, 2500 forks, 310 open issues, 420 subscribers. Last push: 2026-03-02. Topics: aider, repomap, codebase maps, cli, agents.",
+    "url": "https://github.com/Aider-AI/aider",
+    "author": "Aider-AI",
+    "publishedAt": "2026-03-02T10:45:00Z",
+    "metadata": {
+      "repoFullName": "Aider-AI/aider",
+      "repoLabel": "Aider",
+      "signalType": "repo-activity",
+      "stars": 28400,
+      "forks": 2500,
+      "openIssues": 310,
+      "subscribers": 420,
+      "pushedAt": "2026-03-02T10:45:00Z"
+    }
+  },
+  {
+    "id": "pm-skills-2026-03-01",
+    "text": "phuryn/pm-skills: Community skill pack that shows how reusable domain workflows can be packaged cleanly. Adoption signals: 620 stars, 44 forks, 9 open issues, 14 subscribers. Last push: 2026-03-01. Topics: skills, workflow packaging, reusable commands.",
+    "url": "https://github.com/phuryn/pm-skills",
+    "author": "phuryn",
+    "publishedAt": "2026-03-01T08:10:00Z",
+    "metadata": {
+      "repoFullName": "phuryn/pm-skills",
+      "repoLabel": "PM Skills",
+      "signalType": "repo-activity",
+      "stars": 620,
+      "forks": 44,
+      "openIssues": 9,
+      "subscribers": 14,
+      "pushedAt": "2026-03-01T08:10:00Z"
+    }
+  }
+]

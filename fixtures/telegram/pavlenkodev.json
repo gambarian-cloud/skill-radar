@@ -1,0 +1,26 @@
+[
+  {
+    "id": "pavlenko-001",
+    "hoursAgo": 2,
+    "url": "https://t.me/pavlenkodev/501",
+    "text": "Among fresh skill-pack repos, I would watch phuryn/pm-skills and anthropics/skills first. One is strong packaging for repeated processes, the other is a clean official baseline for Claude-native workflows."
+  },
+  {
+    "id": "pavlenko-002",
+    "hoursAgo": 4,
+    "url": "https://t.me/pavlenkodev/502",
+    "text": "shanraisshan/claude-code-best-practice is useful not because it contains everything, but because you can steal one or two hard rules about verification and session memory and work better immediately."
+  },
+  {
+    "id": "pavlenko-003",
+    "hoursAgo": 7,
+    "url": "https://t.me/pavlenkodev/503",
+    "text": "When the same thing shows up in several places, that is not noise anymore. Official sources and practitioners keep converging on the same themes: worktrees, verification-before-completion, layered context, and disciplined agent memory."
+  },
+  {
+    "id": "pavlenko-004",
+    "hoursAgo": 10,
+    "url": "https://t.me/pavlenkodev/504",
+    "text": "If I had to explain the difference between official and practitioner layers quickly, I would place openai/skills, anthropics/skills, and shanraisshan/claude-code-best-practice side by side. That makes capability truth and practice truth obvious."
+  }
+]

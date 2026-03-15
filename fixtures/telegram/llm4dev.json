@@ -1,0 +1,26 @@
+[
+  {
+    "id": "llm4dev-001",
+    "hoursAgo": 3,
+    "url": "https://t.me/LLM4dev/1001",
+    "text": "Right now the cleanest reusable-skill comparison is anthropics/skills versus shanraisshan/claude-code-best-practice. One gives the official baseline, the other gives sharper practice around memory, hooks, and verification."
+  },
+  {
+    "id": "llm4dev-002",
+    "hoursAgo": 5,
+    "url": "https://t.me/LLM4dev/1002",
+    "text": "phuryn/pm-skills matters beyond product management. It is a strong example of turning repeated work into a transferable skill pack that can move between projects."
+  },
+  {
+    "id": "llm4dev-003",
+    "hoursAgo": 8,
+    "url": "https://t.me/LLM4dev/1003",
+    "text": "If you need a discipline baseline for coding agents, read official repos like anthropics/skills together with practice rules from shanraisshan/claude-code-best-practice, not in isolation."
+  },
+  {
+    "id": "llm4dev-004",
+    "hoursAgo": 11,
+    "url": "https://t.me/LLM4dev/1004",
+    "text": "Spec-driven workflow, context engineering, and MCP retrieval keep converging on the same lesson: do not keep everything in one giant AGENTS.md file, split knowledge into layers."
+  }
+]

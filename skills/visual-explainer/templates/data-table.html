@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Requirements Audit — Reference Template</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ─── Design tokens ─────────────────────────────────────────────────── */
+:root {
+  --rose-50:  #fff5f7;
+  --rose-100: #ffe4ea;
+  --rose-200: #ffc4d0;
+  --rose-300: #f89aaa;
+  --rose-400: #e8607a;
+  --rose-500: #c73055;
+  --rose-600: #9a1a38;
+  --rose-700: #720f28;
+
+  --cran-100: #fce8ee;
+  --cran-200: #f7c4d4;
+  --cran-400: #d63060;
+  --cran-600: #8f1535;
+
+  --warm-50:  #fdfcfb;
+  --warm-100: #f7f4f1;
+  --warm-200: #ece7e0;
+  --warm-300: #d8d0c5;
+  --warm-700: #695648;
+  --warm-900: #2a1e18;
+
+  --ink:      #1e1510;
+  --ink-soft: #4a3828;
+  --muted:    #8a7060;
+  --border:   #ddd0c5;
+
+  --green-100: #eef6ec;
+  --green-400: #4caf50;
+  --green-600: #2e7d32;
+  --green-700: #1b5e20;
+
+  --amber-100: #fff8e1;
+  --amber-400: #ffca28;
+  --amber-600: #f57f17;
+  --amber-700: #e65100;
+
+  --red-100: #ffebee;
+  --red-400: #ef5350;
+  --red-600: #b71c1c;
+
+  --radius-sm: 5px;
+  --radius-md: 9px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  --shadow-card: 0 2px 10px rgba(30,21,16,.07), 0 1px 3px rgba(30,21,16,.05);
+  --shadow-kpi:  0 4px 20px rgba(30,21,16,.10), 0 1px 4px rgba(30,21,16,.06);
+
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans:  'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono:  'JetBrains Mono', 'Courier New', monospace;
+
+  --stagger-step: 60ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rose-50:  #1e0a0f;
+    --rose-100: #2d1018;
+    --rose-200: #4a1a28;
+    --rose-300: #7a3048;
+    --rose-400: #cc5070;
+    --rose-500: #e87090;
+    --rose-600: #f4aabb;
+    --rose-700: #fad0da;
+
+    --cran-100: #2a0e18;
+    --cran-200: #4a1828;
+    --cran-400: #e05080;
+    --cran-600: #f4a0c0;
+
+    --warm-50:  #141010;
+    --warm-100: #1c1614;
+    --warm-200: #28201c;
+    --warm-300: #3c3028;
+    --warm-700: #b09080;
+    --warm-900: #f4ede6;
+
+    --ink:      #f4ede6;
+    --ink-soft: #c8b0a0;
+    --muted:    #9a8070;
+    --border:   #3a2e28;
+
+    --green-100: #0e1e10;
+    --green-400: #4caf50;
+    --green-600: #66bb6a;
+    --green-700: #a5d6a7;
+
+    --amber-100: #1e1800;
+    --amber-400: #ffc107;
+    --amber-600: #ffb300;
+    --amber-700: #ffe082;
+
+    --red-100: #1e0808;
+    --red-400: #ef5350;
+    --red-600: #ef9a9a;
+
+    --shadow-card: 0 2px 10px rgba(0,0,0,.25), 0 1px 3px rgba(0,0,0,.18);
+    --shadow-kpi:  0 4px 20px rgba(0,0,0,.35), 0 1px 4px rgba(0,0,0,.22);
+  }
+}
+
+/* ─── Reset ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--warm-50);
+  color: var(--ink);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* subtle radial background tint */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 85% 10%, rgba(199,48,85,.08) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 35% at 10% 80%, rgba(199,48,85,.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Layout ────────────────────────────────────────────────────────── */
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* ─── Animation ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .fade-in {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp .45s ease forwards;
+    animation-delay: calc(var(--i, 0) * var(--stagger-step));
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .row-anim {
+    opacity: 0;
+    animation: rowFade .35s ease forwards;
+    animation-delay: calc(var(--r, 0) * 45ms + 300ms);
+  }
+
+  @keyframes rowFade {
+    from { opacity: 0; background-color: var(--rose-100); }
+    to   { opacity: 1; }
+  }
+}
+
+/* ─── Header ────────────────────────────────────────────────────────── */
+.page-header {
+  margin-bottom: 36px;
+}
+
+.page-header .eyebrow {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--rose-500);
+  background: var(--rose-100);
+  border: 1px solid var(--rose-200);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  padding: 2px 9px;
+  margin-bottom: 10px;
+}
+
+.page-header h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink);
+  letter-spacing: -.01em;
+  margin-bottom: 6px;
+}
+
+.page-header .subtitle {
+  font-size: .9rem;
+  color: var(--muted);
+}
+
+/* ─── KPI cards ─────────────────────────────────────────────────────── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.kpi-card {
+  background: var(--warm-100);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-kpi);
+  text-align: center;
+}
+
+.kpi-card__value {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.kpi-card__value--rose    { color: var(--rose-500);  }
+.kpi-card__value--green   { color: var(--green-600); }
+.kpi-card__value--amber   { color: var(--amber-600); }
+.kpi-card__value--red     { color: var(--red-400);   }
+
+.kpi-card__label {
+  font-size: .78rem;
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: .02em;
+}
+
+/* ─── Status badges ─────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  letter-spacing: .02em;
+}
+
+.badge::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.badge--match {
+  background: var(--green-100);
+  color: var(--green-700);
+  border: 1px solid rgba(76,175,80,.25);
+}
+.badge--match::before { background: var(--green-400); }
+
+.badge--gap {
+  background: var(--red-100);
+  color: var(--red-600);
+  border: 1px solid rgba(239,83,80,.25);
+}
+.badge--gap::before { background: var(--red-400); }
+
+.badge--partial {
+  background: var(--amber-100);
+  color: var(--amber-700);
+  border: 1px solid rgba(255,202,40,.35);
+}
+.badge--partial::before { background: var(--amber-400); }
+
+/* ─── Table wrapper ─────────────────────────────────────────────────── */
+.table-wrap {
+  background: var(--warm-100);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── Table ─────────────────────────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .86rem;
+}
+
+/* sticky header */
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+thead th {
+  background: var(--rose-100);
+  color: var(--rose-600);
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 13px 16px;
+  text-align: left;
+  border-bottom: 2px solid var(--rose-200);
+  white-space: nowrap;
+}
+
+thead th:first-child { padding-left: 20px; }
+thead th:last-child  { padding-right: 20px; }
+
+/* alternating rows */
+tbody tr:nth-child(even) {
+  background: var(--warm-50);
+}
+tbody tr:nth-child(odd) {
+  background: var(--warm-100);
+}
+
+tbody tr:hover {
+  background: var(--rose-50);
+  transition: background .15s;
+}
+
+tbody td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink-soft);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+tbody td:first-child {
+  padding-left: 20px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+tbody td:last-child { padding-right: 20px; }
+
+/* wide column with text wrap */
+td.col-notes {
+  max-width: 280px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* code ref in cell */
+td code, th code {
+  font-family: var(--font-mono);
+  font-size: .8em;
+  background: var(--warm-200);
+  color: var(--rose-600);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* row number */
+td.col-num {
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  color: var(--muted);
+  width: 40px;
+  text-align: right;
+  padding-right: 8px;
+}
+
+/* ─── Summary footer row ────────────────────────────────────────────── */
+tfoot tr {
+  background: var(--rose-100) !important;
+}
+
+tfoot td {
+  padding: 12px 16px;
+  font-weight: 600;
+  color: var(--rose-600);
+  font-size: .85rem;
+  border-bottom: none;
+  border-top: 2px solid var(--rose-200);
+}
+
+tfoot td:first-child { padding-left: 20px; }
+tfoot td:last-child  { padding-right: 20px; }
+
+/* ─── Collapsible details ───────────────────────────────────────────── */
+.details-wrap {
+  background: var(--warm-100);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+details summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 22px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  font-size: .9rem;
+  color: var(--ink);
+  list-style: none;
+}
+
+details summary::-webkit-details-marker { display: none; }
+
+details summary .summary-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--rose-200);
+  color: var(--rose-600);
+  font-family: var(--font-mono);
+  font-size: .85rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 20px;
+  flex-shrink: 0;
+  transition: transform .25s ease;
+}
+
+details[open] summary .summary-icon {
+  transform: rotate(45deg);
+  background: var(--rose-300);
+}
+
+details summary .summary-tag {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.details-body {
+  padding: 0 22px 22px;
+  border-top: 1px solid var(--border);
+}
+
+.details-body h3 {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--rose-500);
+  margin: 18px 0 10px;
+}
+
+.details-body p {
+  font-size: .875rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  margin-bottom: 10px;
+}
+
+.details-body ul {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.details-body li {
+  font-size: .875rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .kpi-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 380px) {
+  .kpi-row {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <!-- ── Header ──────────────────────────────────────────────────────── -->
+  <header class="page-header fade-in" style="--i:0">
+    <div class="eyebrow">data table · reference template</div>
+    <h1>Requirements Audit</h1>
+    <p class="subtitle">Victoria's email specification vs implementation plan — line-by-line comparison, 14 items</p>
+  </header>
+
+  <!-- ── KPI summary cards ────────────────────────────────────────────── -->
+  <div class="kpi-row fade-in" style="--i:1">
+
+    <div class="kpi-card">
+      <div class="kpi-card__value">14</div>
+      <div class="kpi-card__label">Total requirements</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-card__value kpi-card__value--green">13</div>
+      <div class="kpi-card__label">Match</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-card__value kpi-card__value--red">1</div>
+      <div class="kpi-card__label">Gap identified</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-card__value kpi-card__value--rose">93%</div>
+      <div class="kpi-card__label">Coverage rate</div>
+    </div>
+
+  </div>
+
+  <!-- ── Table ────────────────────────────────────────────────────────── -->
+  <div class="table-wrap fade-in" style="--i:2">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-num">#</th>
+            <th>Requirement</th>
+            <th>Victoria's email</th>
+            <th>Implementation plan</th>
+            <th>Status</th>
+            <th class="col-notes">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="row-anim" style="--r:0">
+            <td class="col-num">01</td>
+            <td>User authentication</td>
+            <td>Email + password login, no SSO</td>
+            <td><code>auth/login.ts</code> — bcrypt + JWT</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">Matches spec exactly. Refresh token rotation included.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:1">
+            <td class="col-num">02</td>
+            <td>Role-based access</td>
+            <td>Admin, Editor, Viewer roles</td>
+            <td><code>middleware/rbac.ts</code> — 3 roles</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">All three roles implemented with permission guards.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:2">
+            <td class="col-num">03</td>
+            <td>Data export</td>
+            <td>CSV and PDF export for all reports</td>
+            <td><code>export/csv.ts</code>, PDF not listed</td>
+            <td><span class="badge badge--gap">gap</span></td>
+            <td class="col-notes">PDF export missing from implementation plan. CSV covered. See gap analysis below.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:3">
+            <td class="col-num">04</td>
+            <td>Dashboard widgets</td>
+            <td>6 configurable widgets</td>
+            <td><code>components/widgets/</code> — 6 files</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">Widget registry matches email attachment list.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:4">
+            <td class="col-num">05</td>
+            <td>Email notifications</td>
+            <td>Digest + real-time alerts</td>
+            <td><code>notify/email.ts</code> — both modes</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">SendGrid integration confirmed. Unsubscribe link required by spec is present.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:5">
+            <td class="col-num">06</td>
+            <td>Audit log</td>
+            <td>All write actions logged with user + timestamp</td>
+            <td><code>middleware/audit.ts</code></td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">Append-only table. 90-day retention per spec.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:6">
+            <td class="col-num">07</td>
+            <td>Multi-language support</td>
+            <td>EN, DE, FR at launch</td>
+            <td><code>i18n/</code> — en, de, fr locales</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">i18next. RTL not required by spec.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:7">
+            <td class="col-num">08</td>
+            <td>API rate limiting</td>
+            <td>100 req/min per token</td>
+            <td><code>middleware/ratelimit.ts</code> — 100 rpm</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">Redis-backed sliding window. Headers X-RateLimit-* included.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:8">
+            <td class="col-num">09</td>
+            <td>File uploads</td>
+            <td>Max 25 MB, image + PDF only</td>
+            <td><code>upload/handler.ts</code> — 25 MB limit, MIME check</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">S3 presigned URLs. Virus scan on upload confirmed.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:9">
+            <td class="col-num">10</td>
+            <td>Search</td>
+            <td>Full-text across all records</td>
+            <td><code>search/index.ts</code> — pg full-text</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">tsvector + GIN index. Facet filters deferred to v2 per agreement.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:10">
+            <td class="col-num">11</td>
+            <td>Dark mode</td>
+            <td>System preference + manual toggle</td>
+            <td><code>theme/toggle.tsx</code> — system + manual</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">CSS custom properties. Preference persisted in localStorage.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:11">
+            <td class="col-num">12</td>
+            <td>Accessibility</td>
+            <td>WCAG 2.1 AA</td>
+            <td>Axe CI check in pipeline</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">Automated Axe scan. Manual keyboard audit planned pre-launch.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:12">
+            <td class="col-num">13</td>
+            <td>Session timeout</td>
+            <td>30-minute inactivity logout</td>
+            <td><code>auth/session.ts</code> — 30 min idle</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">Activity heartbeat every 60 s. Warning modal at 25 min.</td>
+          </tr>
+
+          <tr class="row-anim" style="--r:13">
+            <td class="col-num">14</td>
+            <td>Data retention policy</td>
+            <td>User data deleted 30 days after account close</td>
+            <td><code>jobs/cleanup.ts</code> — 30-day schedule</td>
+            <td><span class="badge badge--match">match</span></td>
+            <td class="col-notes">Soft delete + hard purge job. GDPR erasure endpoint also present.</td>
+          </tr>
+
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">Summary — 14 requirements reviewed</td>
+            <td colspan="2"></td>
+            <td><span class="badge badge--gap">1 gap</span></td>
+            <td class="col-notes">One item requires resolution before sign-off.</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Collapsible gap analysis ──────────────────────────────────────── -->
+  <div class="details-wrap fade-in" style="--i:3">
+    <details>
+      <summary>
+        <span class="summary-icon">+</span>
+        Gap analysis — item 03: PDF export
+        <span class="summary-tag">1 item · expand</span>
+      </summary>
+      <div class="details-body">
+
+        <h3>What Victoria specified</h3>
+        <p>
+          Victoria's email (thread dated 2026-03-02, subject "Platform v2 final requirements") states explicitly:
+          <em>"All report views must support CSV and PDF export. PDF must match the printed layout used by finance."</em>
+        </p>
+
+        <h3>What the implementation plan covers</h3>
+        <p>
+          The implementation plan includes <code>export/csv.ts</code> with full column mapping and a streaming
+          response for large datasets. PDF export is not listed in any task, milestone, or file inventory.
+        </p>
+
+        <h3>Risk</h3>
+        <ul>
+          <li>Finance team uses PDF export for monthly board packs — this is a hard dependency, not optional.</li>
+          <li>Puppeteer or a headless renderer will be needed; this is non-trivial to add post-build.</li>
+          <li>Print-layout CSS must match the existing Word template Victoria attached.</li>
+        </ul>
+
+        <h3>Recommended action</h3>
+        <p>
+          Add a PDF export task to the implementation plan before sprint kickoff. Suggest <code>export/pdf.ts</code>
+          using Puppeteer with a <code>@media print</code> stylesheet derived from the finance template.
+          Estimate: 2–3 days. Assign to the same engineer handling CSV export for context continuity.
+        </p>
+
+      </div>
+    </details>
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>

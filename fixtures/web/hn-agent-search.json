@@ -1,0 +1,54 @@
+[
+  {
+    "id": "hn-claude-toolkit",
+    "publishedAt": "2026-03-06T09:55:48Z",
+    "url": "https://newartisans.com/2026/02/my-claude-code-toolkit/",
+    "author": "simonmic",
+    "text": "My Claude Code Toolkit. Discussion about memory files, workflows, and practical Claude Code habits from a real operator. HN signals: 42 points, 19 comments.",
+    "metadata": {
+      "provider": "hn-algolia-search",
+      "query": "\"Claude Code\"",
+      "points": 42,
+      "comments": 19
+    }
+  },
+  {
+    "id": "hn-agent-skills-security",
+    "publishedAt": "2026-03-06T18:21:52Z",
+    "url": "https://github.com/cisco-ai-defense/skill-scanner",
+    "author": "acmecorp",
+    "text": "Security Scanner for Agent Skills. HN discussion about scanning and validating agent-skill packages before adoption. HN signals: 31 points, 12 comments.",
+    "metadata": {
+      "provider": "hn-algolia-search",
+      "query": "\"agent skills\"",
+      "points": 31,
+      "comments": 12
+    }
+  },
+  {
+    "id": "hn-ask-agents-md",
+    "publishedAt": "2026-03-06T07:56:10Z",
+    "url": "https://www.infoq.com/news/2026/03/agents-context-file-value-review/",
+    "author": "papertrail",
+    "text": "New Research Reassesses the Value of AGENTS.md Files for AI Coding. Discussion on layered context, scaling past one instruction file, and when AGENTS.md helps or hurts. HN signals: 65 points, 38 comments.",
+    "metadata": {
+      "provider": "hn-algolia-search",
+      "query": "\"AGENTS.md\"",
+      "points": 65,
+      "comments": 38
+    }
+  },
+  {
+    "id": "hn-anthropic-skills",
+    "publishedAt": "2026-03-06T20:13:15Z",
+    "url": "https://github.com/anthropics/skills",
+    "author": "buildman",
+    "text": "anthropics/skills: Public repository for Agent Skills. HN discussion about the official Claude skill ecosystem and what parts are production-ready. HN signals: 57 points, 24 comments.",
+    "metadata": {
+      "provider": "hn-algolia-search",
+      "query": "\"anthropics/skills\"",
+      "points": 57,
+      "comments": 24
+    }
+  }
+]
