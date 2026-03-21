@@ -59,11 +59,11 @@ export const REDDIT_RETUNE_POLICIES: RedditRetunePolicy[] = [
   {
     subreddit: "ChatGPTCoding",
     label: "r/ChatGPTCoding",
-    baselineStatus: "short-probation",
-    maxCycles: 3,
-    successMetric: "actionable",
+    baselineStatus: "probation",
+    maxCycles: 5,
+    successMetric: "artifact-backed",
     successThreshold: 1,
-    keepReason: "fast-fail experiment that must prove basic usefulness quickly",
+    keepReason: "passed short-probation (1 actionable in 3 cycles) but 0 artifact-backed; promoted to regular probation 2026-03-21, must produce 1+ artifact-backed item by cycle 5 or remove",
   },
 ] as const;
 
@@ -74,6 +74,6 @@ export const SOURCE_RETUNE_CHECKS: SourceRetuneCheck[] = [
     label: "Telegram Pavlenko Only",
     baselineStatus: "watch",
     deadline: "2026-03-15",
-    condition: "disable if actionable stays at 0 by the deadline",
+    condition: "disabled 2026-03-21: 0 actionable by deadline, source turned off in sources.ts",
   },
 ] as const;

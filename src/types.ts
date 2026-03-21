@@ -13,7 +13,7 @@ export type ThemeCategory =
   | "automation";
 export type AgentRuntime = "codex" | "claude-code";
 export type SkillCatalogCategory = "project-owned" | "official" | "community";
-export type SkillCatalogMaturity = "adopt-now" | "watch" | "experimental";
+export type SkillCatalogMaturity = "adopt-now" | "experiment" | "watch" | "reject";
 export type TrustedSkillSourceCategory = "official-catalog" | "community-catalog" | "community-repo" | "marketplace";
 export type CorpusDocumentKind = "research-note" | "daily-digest" | "skill" | "project-doc";
 
@@ -307,6 +307,14 @@ export interface AnalysisResult {
   feedbackNotes: string[];
   policyNotes?: string[];
   discussionCeilingDropped?: boolean;
+  scoringTrace?: ScoringTraceStep[];
+}
+
+export interface ScoringTraceStep {
+  label: string;
+  delta: number;
+  running: number;
+  reason?: string;
 }
 
 export interface ScoredPost extends NormalizedPost {

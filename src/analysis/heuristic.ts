@@ -1,4 +1,5 @@
 import { isArtifactEvidenceUrl } from "./artifact-evidence.ts";
+import { isCriticalRuntimeFailure } from "./failure-signals.ts";
 import { DIRECT_SIGNAL_KEYWORDS, STACK_KEYWORDS, THEME_KEYWORDS } from "../config/interest-profile.ts";
 import { buildLensSearchTerms, getActiveRadarLenses, type RadarProfile } from "../config/radar-profile.ts";
 import type {
@@ -8,6 +9,7 @@ import type {
   NormalizedPost,
   RankingFeedbackRule,
   ScoredPost,
+  ScoringTraceStep,
   ThemeCategory,
 } from "../types.ts";
 
@@ -72,33 +74,6 @@ function hasArtifactEvidence(post: NormalizedPost): boolean {
     || isArtifactEvidenceUrl(linkedUrl);
 }
 
-function isCriticalRuntimeFailure(text: string): boolean {
-  const hasFailureSignal =
-    text.includes("broke")
-    || text.includes("broken")
-    || /\bbreaks (on|when|after|with)\b/iu.test(text)
-    || text.includes("regression")
-    || text.includes("crash")
-    || text.includes("crashes")
-    || text.includes("failing")
-    || text.includes("fails")
-    || text.includes("stopped working")
-    || text.includes("cannot ")
-    || text.includes("can't ")
-    || text.includes("unable to ");
-
-  const touchesCurrentStack =
-    text.includes("claude code")
-    || text.includes("codex")
-    || text.includes("worktree")
-    || text.includes("worktrees")
-    || text.includes("mcp")
-    || text.includes("agents.md")
-    || text.includes("skill");
-
-  return hasFailureSignal && touchesCurrentStack;
-}
-
 function selectTheme(text: string): { theme: ThemeCategory; matches: string[] } {
   let bestTheme: ThemeCategory = "tooling";
   let bestScore = -1;
@@ -108,11 +83,11 @@ function selectTheme(text: string): { theme: ThemeCategory; matches: string[] } 
     const matches = countMatches(text, THEME_KEYWORDS[theme]);
     let score = matches.length;
 
-    if (theme === "security" && (text.includes("server-only") || text.includes("leak") || text.includes("browser bundle") || text.includes("????????") || text.includes("sandbox"))) {
+    if (theme === "security" && (text.includes("server-only") || text.includes("leak") || text.includes("browser bundle") || text.includes("exposure") || text.includes("sandbox"))) {
       score += 2;
     }
 
-    if (theme === "automation" && (text.includes("telegram") || text.includes("apify") || text.includes("automations") || text.includes("????????"))) {
+    if (theme === "automation" && (text.includes("telegram") || text.includes("apify") || text.includes("automations") || text.includes("pipeline"))) {
       score += 2;
     }
 
@@ -129,7 +104,7 @@ function selectTheme(text: string): { theme: ThemeCategory; matches: string[] } 
 function inferTopic(theme: ThemeCategory, text: string): string {
   switch (theme) {
     case "agent-workflow":
-      return text.includes("skill") || text.includes("?????") ? "Reusable agent skills and workflow design" : "Agent workflow pattern";
+      return text.includes("skill") || text.includes("agent") ? "Reusable agent skills and workflow design" : "Agent workflow pattern";
     case "prompting-evals":
       return "Prompt reliability and eval discipline";
     case "frontend":
@@ -147,7 +122,7 @@ function inferTopic(theme: ThemeCategory, text: string): string {
 }
 
 function pickProject(theme: ThemeCategory, text: string): "Volcker Copilot" | "Signal Scout" | "none" {
-  if (theme === "automation" && (text.includes("telegram") || text.includes("apify") || text.includes("dataset") || text.includes("scraping") || text.includes("??????"))) {
+  if (theme === "automation" && (text.includes("telegram") || text.includes("apify") || text.includes("dataset") || text.includes("scraping") || text.includes("ingestion"))) {
     return "Signal Scout";
   }
 
@@ -194,8 +169,8 @@ function scoreSourceContext(post: NormalizedPost, text: string): number {
       text.includes("discussion") ||
       text.includes("open source") ||
       text.includes("oss") ||
-      text.includes("?????") ||
-      text.includes("?????????"))
+      text.includes("release") ||
+      text.includes("open-source"))
   ) {
     score += 6;
   }
@@ -556,48 +531,97 @@ function buildBaseAnalysis(post: NormalizedPost): AnalysisResult {
   const stackMatches = countMatches(normalizedText, STACK_KEYWORDS);
   const directMatches = countMatches(normalizedText, DIRECT_SIGNAL_KEYWORDS);
 
+  const trace: ScoringTraceStep[] = [];
   let score = 12;
-  score += themeMatches.length * 9;
-  score += stackMatches.length * 6;
-  score += directMatches.length * 5;
-  score += scoreSourceContext(post, normalizedText);
-  score += scoreGitHubAdoptionSignals(post);
-  score += scoreHackerNewsSignals(post);
-  score += scoreRedditSignals(post);
+  trace.push({ label: "base", delta: 12, running: score });
+
+  const themeDelta = themeMatches.length * 9;
+  if (themeDelta > 0) {
+    score += themeDelta;
+    trace.push({ label: "theme-matches", delta: themeDelta, running: score, reason: themeMatches.slice(0, 3).join(", ") });
+  }
+
+  const stackDelta = stackMatches.length * 6;
+  if (stackDelta > 0) {
+    score += stackDelta;
+    trace.push({ label: "stack-matches", delta: stackDelta, running: score, reason: stackMatches.slice(0, 3).join(", ") });
+  }
+
+  const directDelta = directMatches.length * 5;
+  if (directDelta > 0) {
+    score += directDelta;
+    trace.push({ label: "direct-signal", delta: directDelta, running: score, reason: directMatches.slice(0, 3).join(", ") });
+  }
+
+  const srcDelta = scoreSourceContext(post, normalizedText);
+  if (srcDelta !== 0) {
+    score += srcDelta;
+    trace.push({ label: "source-context", delta: srcDelta, running: score, reason: `${post.sourceTier}/${post.sourceKind}` });
+  }
+
+  const ghDelta = scoreGitHubAdoptionSignals(post);
+  if (ghDelta !== 0) {
+    score += ghDelta;
+    trace.push({ label: "github-adoption", delta: ghDelta, running: score });
+  }
+
+  const hnDelta = scoreHackerNewsSignals(post);
+  if (hnDelta !== 0) {
+    score += hnDelta;
+    trace.push({ label: "hn-signals", delta: hnDelta, running: score });
+  }
+
+  const redditDelta = scoreRedditSignals(post);
+  if (redditDelta !== 0) {
+    score += redditDelta;
+    trace.push({ label: "reddit-signals", delta: redditDelta, running: score });
+  }
 
   if (normalizedText.includes("volcker") || normalizedText.includes("next.js") || normalizedText.includes("vercel")) {
     score += 6;
+    trace.push({ label: "project-keyword", delta: 6, running: score, reason: "volcker/next.js/vercel" });
   }
 
-  if (normalizedText.includes("try") || normalizedText.includes("pattern") || normalizedText.includes("worth") || normalizedText.includes("?????") || normalizedText.includes("??????????")) {
+  if (normalizedText.includes("try") || normalizedText.includes("pattern") || normalizedText.includes("worth") || normalizedText.includes("useful") || normalizedText.includes("recommended")) {
     score += 4;
+    trace.push({ label: "actionable-language", delta: 4, running: score });
   }
 
   if (themeMatches.length >= 3) {
     score += 8;
+    trace.push({ label: "theme-depth-bonus", delta: 8, running: score, reason: `${themeMatches.length} theme matches` });
   }
 
-  if (theme === "security" && (normalizedText.includes("leak") || normalizedText.includes("server-only") || normalizedText.includes("sandbox") || normalizedText.includes("????????"))) {
+  if (theme === "security" && (normalizedText.includes("leak") || normalizedText.includes("server-only") || normalizedText.includes("sandbox") || normalizedText.includes("exposure"))) {
     score += 14;
+    trace.push({ label: "security-boost", delta: 14, running: score });
   }
 
-  if (theme === "automation" && (normalizedText.includes("telegram") || normalizedText.includes("apify") || normalizedText.includes("automations") || normalizedText.includes("webhook") || normalizedText.includes("????????"))) {
+  if (theme === "automation" && (normalizedText.includes("telegram") || normalizedText.includes("apify") || normalizedText.includes("automations") || normalizedText.includes("webhook") || normalizedText.includes("pipeline"))) {
     score += 14;
+    trace.push({ label: "automation-boost", delta: 14, running: score });
   }
 
-  if (theme === "agent-workflow" && (normalizedText.includes("claude code") || normalizedText.includes("codex") || normalizedText.includes("agents.md") || normalizedText.includes("?????"))) {
+  if (theme === "agent-workflow" && (normalizedText.includes("claude code") || normalizedText.includes("codex") || normalizedText.includes("agents.md") || normalizedText.includes("skill"))) {
     score += 10;
+    trace.push({ label: "agent-workflow-boost", delta: 10, running: score });
   }
 
-  if (theme === "prompting-evals" && (normalizedText.includes("??????") || normalizedText.includes("context mode") || normalizedText.includes("text-to-sql"))) {
+  if (theme === "prompting-evals" && (normalizedText.includes("eval") || normalizedText.includes("context mode") || normalizedText.includes("text-to-sql"))) {
     score += 10;
+    trace.push({ label: "eval-boost", delta: 10, running: score });
   }
 
-  if (normalizedText.includes("not urgent") || normalizedText.includes("worth saving") || normalizedText.includes("save") || normalizedText.includes("????????? ????")) {
+  if (normalizedText.includes("not urgent") || normalizedText.includes("worth saving") || normalizedText.includes("save") || normalizedText.includes("low priority")) {
     score -= 10;
+    trace.push({ label: "low-priority-penalty", delta: -10, running: score });
   }
 
   const clampedScore = clamp(score);
+  if (clampedScore !== score) {
+    trace.push({ label: "clamp", delta: clampedScore - score, running: clampedScore, reason: `clamped from ${score}` });
+  }
+
   const decision = decisionFromScore(clampedScore);
   const project = pickProject(theme, normalizedText);
   const urgency = inferUrgency(clampedScore, decision);
@@ -620,7 +644,14 @@ function buildBaseAnalysis(post: NormalizedPost): AnalysisResult {
     matchedSignals,
     feedbackRuleIds: [],
     feedbackNotes: [],
+    scoringTrace: trace,
   };
+}
+
+function appendTrace(analysis: AnalysisResult, step: ScoringTraceStep): void {
+  if (analysis.scoringTrace) {
+    analysis.scoringTrace.push(step);
+  }
 }
 
 function applyScoutGuardrails(post: NormalizedPost, analysis: AnalysisResult): AnalysisResult {
@@ -631,12 +662,14 @@ function applyScoutGuardrails(post: NormalizedPost, analysis: AnalysisResult): A
       return analysis;
     }
 
-    return {
+    const result = {
       ...analysis,
-      decision: "save-for-later",
+      decision: "save-for-later" as const,
       urgency: inferUrgency(analysis.relevanceScore, "save-for-later"),
       whyItMatters: `${analysis.whyItMatters} This is discussion signal without direct repo evidence, so it should not drive same-day action on its own.`,
     };
+    appendTrace(result, { label: "guardrail-hn-cap", delta: 0, running: result.relevanceScore, reason: "HN discussion without repo evidence" });
+    return result;
   }
 
   if (post.sourceKind === "reddit" && readStringMetadata(post.metadata, "provider") === "reddit-json-listing") {
@@ -647,15 +680,18 @@ function applyScoutGuardrails(post: NormalizedPost, analysis: AnalysisResult): A
     }
 
     const cappedScore = Math.min(analysis.relevanceScore, 75);
-    const decision = analysis.decision === "ignore" ? "ignore" : "save-for-later";
+    const decision = analysis.decision === "ignore" ? "ignore" as const : "save-for-later" as const;
+    const delta = cappedScore - analysis.relevanceScore;
 
-    return {
+    const result = {
       ...analysis,
       relevanceScore: cappedScore,
       decision,
       urgency: inferUrgency(cappedScore, decision),
       whyItMatters: `${analysis.whyItMatters} This is useful discussion signal, but without direct repo evidence it should top out at 'save this week' unless it reports a real breaking change.`,
     };
+    appendTrace(result, { label: "guardrail-reddit-cap", delta, running: cappedScore, reason: "Reddit discussion without repo evidence" });
+    return result;
   }
 
   return analysis;
@@ -682,14 +718,19 @@ function applySourceSpecificActionCaps(
     }
 
     const cappedScore = Math.min(analysis.relevanceScore, 80);
+    const delta = cappedScore - analysis.relevanceScore;
 
-    return {
+    const result = {
       ...analysis,
       relevanceScore: cappedScore,
-      decision: "save-for-later",
+      decision: "save-for-later" as const,
       urgency: inferUrgency(cappedScore, "save-for-later"),
       whyItMatters: `${analysis.whyItMatters} Telegram scout signal should top out at 'save this week' until a watched GitHub artifact confirms it.`,
     };
+    if (delta !== 0) {
+      appendTrace(result, { label: "telegram-cap", delta, running: cappedScore, reason: "unconfirmed scout signal" });
+    }
+    return result;
   }
 
   return analysis;
@@ -721,12 +762,30 @@ function applyRadarProfileFocus(
     return analysis;
   }
 
+  // Respect guardrail caps: if a guardrail already capped the score,
+  // radar lens records the match but does not boost above the capped score.
+  const guardrailCapped = (analysis.scoringTrace ?? []).some(
+    (step) => step.label.startsWith("guardrail-"),
+  );
+
+  if (guardrailCapped) {
+    const result = {
+      ...analysis,
+      policyNotes: [
+        ...(analysis.policyNotes ?? []),
+        `Active radar lens ${bestLensLabel} matched ${bestMatches.slice(0, 3).join(", ")} (boost suppressed: guardrail cap active).`,
+      ],
+    };
+    appendTrace(result, { label: "radar-lens", delta: 0, running: analysis.relevanceScore, reason: `lens: ${bestLensLabel} (suppressed by guardrail)` });
+    return result;
+  }
+
   const boost = Math.min(12, bestMatches.length * 4);
   const adjustedScore = clamp(analysis.relevanceScore + boost);
   const decision = decisionFromScore(adjustedScore);
   const urgency = inferUrgency(adjustedScore, decision);
 
-  return {
+  const result = {
     ...analysis,
     relevanceScore: adjustedScore,
     decision,
@@ -736,6 +795,8 @@ function applyRadarProfileFocus(
       `Active radar lens ${bestLensLabel} matched ${bestMatches.slice(0, 3).join(", ")}.`,
     ],
   };
+  appendTrace(result, { label: "radar-lens", delta: boost, running: adjustedScore, reason: `lens: ${bestLensLabel}` });
+  return result;
 }
 
 function applyCrossSourceCorroboration(
@@ -796,11 +857,13 @@ function applyCrossSourceCorroboration(
     return analysis;
   }
 
-  const adjustedScore = clamp(analysis.baseRelevanceScore + adjustment);
+  // Use post-guardrail relevanceScore, not baseRelevanceScore, so corroboration
+  // cannot undo scout guardrail caps (e.g. HN/Reddit score ceilings).
+  const adjustedScore = clamp(analysis.relevanceScore + adjustment);
   const decision = decisionFromScore(adjustedScore);
   const urgency = inferUrgency(adjustedScore, decision);
 
-  return {
+  const result = {
     ...analysis,
     relevanceScore: adjustedScore,
     crossSourceAdjustment: adjustment,
@@ -808,6 +871,8 @@ function applyCrossSourceCorroboration(
     decision,
     urgency,
   };
+  appendTrace(result, { label: "cross-source", delta: adjustment, running: adjustedScore, reason: notes[0] });
+  return result;
 }
 
 function matchesFeedbackRule(post: NormalizedPost, rule: RankingFeedbackRule): boolean {
@@ -861,7 +926,7 @@ function applyRankingFeedback(
   const project = projectRule?.projectOverride ?? analysis.project;
   const urgency = urgencyRule?.urgencyOverride ?? inferUrgency(adjustedScore, decision);
 
-  return {
+  const result = {
     ...analysis,
     decision,
     project,
@@ -871,6 +936,10 @@ function applyRankingFeedback(
     feedbackRuleIds: matchedRules.map((rule) => rule.id),
     feedbackNotes: matchedRules.map((rule) => rule.note ?? rule.description),
   };
+  if (scoreAdjustment !== 0) {
+    appendTrace(result, { label: "feedback", delta: scoreAdjustment, running: adjustedScore, reason: matchedRules.map((r) => r.id).join(", ") });
+  }
+  return result;
 }
 
 export function analyzePost(
@@ -879,6 +948,13 @@ export function analyzePost(
   crossLinks: CrossSourceLink[] = [],
   profile: RadarProfile | null = null,
 ): AnalysisResult {
+  // Scoring pipeline order — each layer operates on the previous layer's output:
+  // 1. base       → theme, stack, signals, platform, boosts, penalties, clamp
+  // 2. guardrails → HN/Reddit caps for discussion-only posts
+  // 3. corroboration → cross-source boost (respects guardrail caps)
+  // 4. radar lens → profile focus boost
+  // 5. action caps → Telegram scout ceiling
+  // 6. feedback   → manual ranking overrides
   const guarded = applyScoutGuardrails(post, buildBaseAnalysis(post));
   const corroborated = applyCrossSourceCorroboration(post, guarded, crossLinks);
   const focused = applyRadarProfileFocus(post, corroborated, profile);

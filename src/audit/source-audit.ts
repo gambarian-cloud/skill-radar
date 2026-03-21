@@ -70,12 +70,7 @@ export const DEFAULT_SOURCE_AUDIT_PROFILES: SourceAuditProfile[] = [
     runMode: "auto",
     sourceFilter: "telegram-llm4dev",
   },
-  {
-    id: "telegram-pavlenko-auto",
-    label: "Telegram Pavlenko Only",
-    runMode: "auto",
-    sourceFilter: "telegram-pavlenkodev",
-  },
+  // Pavlenko disabled 2026-03-21: 0 actionable by retune deadline 2026-03-15
   {
     id: "mock-baseline",
     label: "Mock Baseline",

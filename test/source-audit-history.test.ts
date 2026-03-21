@@ -97,6 +97,6 @@ test("renderSourceAuditHistoryReport summarizes source and reddit trends", () =>
   assert.match(report, /## Retune Status Read/);
   assert.match(report, /r\/ClaudeAI: core; 2 cycle\(s\) seen, 2 actionable total, 2 artifact-backed total/);
   assert.match(report, /r\/LLMDevs: probation; 1\/5 cycle\(s\), 1 actionable, 0 artifact-backed, 0 watchlist evidence; needs 1\+ artifact-backed by cycle 5; 4 cycle\(s\) left\./);
-  assert.match(report, /r\/ChatGPTCoding: short-probation; no scored cycles yet, so keep measuring before acting\./);
-  assert.match(report, /Telegram Pavlenko Only: watch; latest 24h actionable 0; disable if actionable stays at 0 by the deadline by 2026-03-15\./);
+  assert.match(report, /r\/ChatGPTCoding: probation; no scored cycles yet, so keep measuring before acting\./);
+  assert.match(report, /Telegram Pavlenko Only: watch; latest 24h actionable 0; disabled 2026-03-21: 0 actionable by deadline, source turned off in sources\.ts by 2026-03-15\./);
 });

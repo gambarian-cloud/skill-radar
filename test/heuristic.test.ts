@@ -287,7 +287,7 @@ test("analyzePost gives GitHub more credit when multiple scout sources surface t
 test("analyzePost gives GitHub adoption signals a structural score boost", () => {
   const lowAdoption = analyzePost(
     {
-      ...makeGitHubPost("example/repo: Agent skills and workflow patterns for coding agents."),
+      ...makeGitHubPost("example/repo: A utility library for general development."),
       metadata: {
         repoFullName: "example/repo",
         stars: 80,
@@ -300,7 +300,7 @@ test("analyzePost gives GitHub adoption signals a structural score boost", () =>
   );
   const highAdoption = analyzePost(
     {
-      ...makeGitHubPost("big/repo: Agent skills and workflow patterns for coding agents."),
+      ...makeGitHubPost("big/repo: A utility library for general development."),
       metadata: {
         repoFullName: "big/repo",
         stars: 12000,
@@ -696,4 +696,71 @@ test("analyzePost boosts creator-relevant posts when creator lens is active", ()
 
   assert.ok(withCreatorProfile.relevanceScore > withoutProfile.relevanceScore);
   assert.match((withCreatorProfile.policyNotes ?? []).join(" "), /Active radar lens Creator/i);
+});
+
+test("analyzePost includes a scoring trace with labeled steps", () => {
+  const result = analyzePost(makeTelegramPost("New Claude Code skill for debugging with worktrees and agents"));
+  const trace = result.scoringTrace;
+
+  assert.ok(Array.isArray(trace), "scoringTrace should be an array");
+  assert.ok(trace!.length >= 2, "trace should have at least base + one signal");
+  assert.strictEqual(trace![0].label, "base");
+  assert.strictEqual(trace![0].delta, 12);
+
+  for (const step of trace!) {
+    assert.ok(typeof step.label === "string" && step.label.length > 0);
+    assert.ok(typeof step.delta === "number");
+    assert.ok(typeof step.running === "number");
+  }
+});
+
+test("radar lens does not override Reddit guardrail cap", () => {
+  // Reddit discussion-only post should be capped at 75 by guardrails.
+  // Radar lens should NOT boost it above 75, even when lens keywords match.
+  const redditPost = makeRedditPost(
+    "New Claude Code skill for building websites, landing pages, and creator content pipelines with AI agents",
+  );
+  const profile = buildRadarProfile(["creator"], "balanced", "2026-03-11T12:00:00.000Z");
+
+  const withProfile = analyzePost(redditPost, [], [], profile);
+  const withoutProfile = analyzePost(redditPost, [], [], null);
+
+  // Both should respect the Reddit 75 cap
+  assert.ok(withoutProfile.relevanceScore <= 75, `without profile: expected <= 75, got ${withoutProfile.relevanceScore}`);
+  assert.ok(withProfile.relevanceScore <= 75, `with profile: expected <= 75, got ${withProfile.relevanceScore}`);
+
+  // Lens match should still be noted in policyNotes
+  const notes = (withProfile.policyNotes ?? []).join(" ");
+  assert.match(notes, /radar lens/i, "radar lens match should be recorded in policyNotes");
+  assert.match(notes, /suppressed/i, "policyNotes should mention boost was suppressed");
+
+  // Trace should show radar-lens step with delta 0
+  const lensStep = (withProfile.scoringTrace ?? []).find((s) => s.label === "radar-lens");
+  assert.ok(lensStep, "trace should have a radar-lens step");
+  assert.strictEqual(lensStep!.delta, 0, "radar-lens delta should be 0 when guardrail is active");
+});
+
+test("radar lens does not promote low-score Reddit post back to use-now", () => {
+  // A Reddit discussion-only post scoring below 75 still gets save-for-later
+  // from guardrails (delta 0 on score, but decision override).
+  // Radar lens must not boost it back into use-now territory.
+  const lowScoreRedditPost = makeRedditPost(
+    "Creator content pipelines and publishing workflows for landing pages",
+  );
+  const profile = buildRadarProfile(["creator"], "balanced", "2026-03-11T12:00:00.000Z");
+
+  const withoutProfile = analyzePost(lowScoreRedditPost, [], [], null);
+  const withProfile = analyzePost(lowScoreRedditPost, [], [], profile);
+
+  // Guardrail should have fired (decision should be save-for-later, not use-now)
+  assert.notStrictEqual(withoutProfile.decision, "use-now",
+    "Reddit discussion-only post should not be use-now without profile");
+
+  // With profile, lens must not promote it back to use-now
+  assert.notStrictEqual(withProfile.decision, "use-now",
+    "Radar lens must not override guardrail decision to use-now");
+
+  // Trace should have the guardrail marker even with zero score delta
+  const guardrailStep = (withProfile.scoringTrace ?? []).find((s) => s.label === "guardrail-reddit-cap");
+  assert.ok(guardrailStep, "guardrail trace should exist even when score delta is 0");
 });

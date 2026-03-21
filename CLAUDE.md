@@ -16,21 +16,24 @@ Read @AGENTS.md for the operational rules and @PRD.md for product direction.
 - Prefer community-backed workflow truth over unsupported hype.
 - Keep this file short. Deeper baseline guidance lives in @reports/research/2026-03-06-dual-tool-baseline.md.
 
-## Skill Composition Mapping
+## Skill Routing
 
-When a task matches a category below, use the skill chain — don't skip steps.
+Before starting work, check if a skill matches the task. Load the skill. Follow it. Do not paraphrase it from memory.
 
-| Task type | Skill chain |
-|-----------|-------------|
-| Build a website/page | `brainstorming` → `frontend-design` → `visual-explainer` (for architecture) → build |
-| Build a presentation | `brainstorming` → `frontend-slides` → build |
-| UX review of a site | `ux-audit` → `visual-explainer` (for report) |
+| Task type | Start with |
+|-----------|------------|
+| Build a website/page | `brainstorming` |
+| Build a presentation | `brainstorming` |
+| UX review of a site | `ux-audit` |
 | Evaluate a link/post/video | `triage-finding` |
-| Find tools before building | `tool-scout` → then build or adopt |
-| Create or edit a skill | `skill-stress-test` (RED-GREEN-REFACTOR) |
-| Design + code a feature | `brainstorming` → `writing-plans` → `executing-plans` |
+| Find tools before building | `tool-scout` |
+| Create or edit a skill | `skill-stress-test` |
+| Design + code a feature | `brainstorming` |
 | Debug a failure | `systematic-debugging` |
 | Research a topic | `deep-research` |
 | Review code or diff | `code-review` |
+| Holistic project review | `brainstorming` |
 
-**Rule:** If a task matches and you skip the chain, explain why.
+Each skill will tell you what to do next. Follow its instructions.
+
+If you skip a matching skill: state which skill you skipped and why before proceeding.

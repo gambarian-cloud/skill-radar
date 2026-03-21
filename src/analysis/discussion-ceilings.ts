@@ -1,36 +1,10 @@
 import { getPostEvidenceFlags } from "./action-quality.ts";
+import { isCriticalRuntimeFailure } from "./failure-signals.ts";
 import type { CrossSourceLink, ScoredPost } from "../types.ts";
 
 interface DiscussionCeilingRule {
   key: string;
   limit: number;
-}
-
-function isCriticalRuntimeFailure(text: string): boolean {
-  const hasFailureSignal =
-    text.includes("broke")
-    || text.includes("broken")
-    || /\bbreaks (on|when|after|with)\b/iu.test(text)
-    || text.includes("regression")
-    || text.includes("crash")
-    || text.includes("crashes")
-    || text.includes("failing")
-    || text.includes("fails")
-    || text.includes("stopped working")
-    || text.includes("cannot ")
-    || text.includes("can't ")
-    || text.includes("unable to ");
-
-  const touchesCurrentStack =
-    text.includes("claude code")
-    || text.includes("codex")
-    || text.includes("worktree")
-    || text.includes("worktrees")
-    || text.includes("mcp")
-    || text.includes("agents.md")
-    || text.includes("skill");
-
-  return hasFailureSignal && touchesCurrentStack;
 }
 
 function getDiscussionCeilingRule(post: ScoredPost): DiscussionCeilingRule | undefined {

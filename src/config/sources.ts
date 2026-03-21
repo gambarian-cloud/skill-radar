@@ -41,7 +41,7 @@ export const SOURCE_CONFIG: SourceConfig[] = [
   {
     id: "telegram-pavlenkodev",
     kind: "telegram",
-    enabled: true,
+    enabled: false, // Disabled 2026-03-21: retune deadline 2026-03-15 passed, 0 actionable items
     label: "Pavlenko Dev & AI",
     tier: "scout",
     priority: 2,
