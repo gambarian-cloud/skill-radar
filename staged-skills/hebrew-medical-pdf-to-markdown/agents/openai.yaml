@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hebrew Medical OCR"
+  short_description: "Hebrew medical PDF OCR skill"
+  default_prompt: "Use $hebrew-medical-pdf-to-markdown to convert a scanned Hebrew medical PDF into source-faithful Markdown with medical-grade OCR QA."
