@@ -1,4 +1,4 @@
-import type { SkillCatalogEntry, TrustedSkillSource } from "../types.ts";
+﻿import type { SkillCatalogEntry, TrustedSkillSource } from "../types.ts";
 
 export const TRUSTED_SKILL_SOURCES: TrustedSkillSource[] = [
   {
@@ -74,7 +74,7 @@ export const SKILL_CATALOG: SkillCatalogEntry[] = [
     tags: ["starter-pack", "parallel", "architecture", "docs", "backend", "handoff"],
     recommendedWhen: ["running Codex and Claude Code in parallel", "building the standalone starter-pack track", "reducing interruption-heavy delegation"],
     compatibility: ["codex", "claude-code"],
-    maturity: "experimental",
+    maturity: "experiment",
     sourceClass: "project-owned",
     sourceUrl: "skills/starter-pack-work-split/SKILL.md",
     evidenceUrls: [
@@ -233,7 +233,7 @@ export const SKILL_CATALOG: SkillCatalogEntry[] = [
     tags: ["design", "ui", "ux", "audit", "accessibility", "read-only", "frontend"],
     recommendedWhen: ["need best-practices design audit", "want prioritized UI issues", "must avoid direct code edits during review"],
     compatibility: ["codex", "claude-code"],
-    maturity: "experimental",
+    maturity: "experiment",
     sourceClass: "project-owned",
     sourceUrl: "skills/design-audit-readonly/SKILL.md",
     evidenceUrls: [
@@ -250,7 +250,7 @@ export const SKILL_CATALOG: SkillCatalogEntry[] = [
     tags: ["ui", "qa", "automation", "playwright", "browser", "testing", "frontend"],
     recommendedWhen: ["manual click testing is too slow", "need automated UI interaction checks", "want screenshot-backed QA findings"],
     compatibility: ["codex", "claude-code"],
-    maturity: "experimental",
+    maturity: "experiment",
     sourceClass: "project-owned",
     sourceUrl: "skills/ui-qa-autopilot/SKILL.md",
     evidenceUrls: [
@@ -385,7 +385,7 @@ export const SKILL_CATALOG: SkillCatalogEntry[] = [
     tags: ["mcp", "cli", "experimental", "tooling"],
     recommendedWhen: ["exploring MCP servers", "trying tools without permanent setup", "one-off MCP tasks"],
     compatibility: ["claude-code"],
-    maturity: "experimental",
+    maturity: "experiment",
     sourceClass: "community",
     sourceUrl: "https://github.com/obra/superpowers-lab",
     evidenceUrls: [
@@ -452,7 +452,7 @@ export const SKILL_CATALOG: SkillCatalogEntry[] = [
     tags: ["spreadsheets", "reporting", "dashboards", "business", "sports"],
     recommendedWhen: ["building lightweight dashboards", "tracking metrics", "supporting presentation or business workflows"],
     compatibility: ["codex"],
-    maturity: "experimental",
+    maturity: "experiment",
     sourceClass: "official",
     sourceUrl: "C:/Users/MI/.codex/skills/.system/spreadsheets/SKILL.md",
     evidenceUrls: [
@@ -468,7 +468,7 @@ export const SKILL_CATALOG: SkillCatalogEntry[] = [
     tags: ["screenshot", "visual", "review", "presentations", "creator", "browser"],
     recommendedWhen: ["capturing UI evidence", "reviewing visual output", "building presentations from live screens"],
     compatibility: ["codex"],
-    maturity: "experimental",
+    maturity: "experiment",
     sourceClass: "official",
     sourceUrl: "C:/Users/MI/.codex/skills/screenshot/SKILL.md",
     evidenceUrls: [
@@ -480,7 +480,7 @@ export const SKILL_CATALOG: SkillCatalogEntry[] = [
   {
     id: "frontend-design",
     label: "Frontend Design",
-    summary: "Instructs Claude to commit to a bold aesthetic direction — distinctive typography, cohesive color system, meaningful motion — before writing frontend code. Kills generic AI slop aesthetics.",
+    summary: "Instructs Claude to commit to a bold aesthetic direction ג€” distinctive typography, cohesive color system, meaningful motion ג€” before writing frontend code. Kills generic AI slop aesthetics.",
     tags: ["frontend", "design", "ui", "css", "typography", "website", "creator"],
     recommendedWhen: ["building a web page", "creating UI components", "starting any frontend work", "need distinctive visual direction"],
     compatibility: ["codex", "claude-code"],
@@ -493,6 +493,24 @@ export const SKILL_CATALOG: SkillCatalogEntry[] = [
     ],
     installHint: "Official Anthropic plugin (Apache 2.0). Should be part of every websites-profile baseline.",
     localPath: "skills/frontend-design/SKILL.md",
+  },
+  {
+    id: "design-elevation",
+    label: "Design Elevation",
+    summary: "Project-owned refinement skill for taking a working website, app, dashboard, or presentation beyond the generic first draft. Adds a deliberate polish loop, design interrogation, reference-driven direction choice, and restraint checks.",
+    tags: ["design", "polish", "frontend", "presentation", "dashboard", "ui", "ux", "refinement"],
+    recommendedWhen: ["a visual output works but feels generic", "polishing a site before finalizing it", "elevating a dashboard or presentation", "showing before-and-after design improvement"],
+    compatibility: ["codex", "claude-code"],
+    maturity: "experiment",
+    sourceClass: "project-owned",
+    sourceUrl: "skills/design-elevation/SKILL.md",
+    evidenceUrls: [
+      "https://claude.com/resources/use-cases/elevate-claudes-design-using-skills",
+      "skills/frontend-design/SKILL.md",
+      "C:/Users/MI/.codex/skills/web-design-guidelines/SKILL.md",
+    ],
+    installHint: "Use after the first functional pass. Pair it with frontend-design for direction-setting and web-design-guidelines for usability guardrails.",
+    localPath: "skills/design-elevation/SKILL.md",
   },
   {
     id: "frontend-slides",
@@ -540,7 +558,7 @@ export const SKILL_CATALOG: SkillCatalogEntry[] = [
       "https://github.com/nicobailon/visual-explainer",
       "https://github.com/alenazaharovaux/share",
     ],
-    installHint: "MIT license. Adapted from nicobailon/visual-explainer with extended journalism and research design patterns. Fills a gap — no existing visualization skill in the catalog.",
+    installHint: "MIT license. Adapted from nicobailon/visual-explainer with extended journalism and research design patterns. Fills a gap ג€” no existing visualization skill in the catalog.",
     localPath: "skills/visual-explainer/SKILL.md",
   },
   {
@@ -572,7 +590,7 @@ export const SKILL_CATALOG: SkillCatalogEntry[] = [
   {
     id: "triage-finding",
     label: "Triage Finding",
-    summary: "Assess external findings (posts, links, videos, screenshots) — explain in plain language, map to current projects, recommend action (apply now / save / skip). Includes fact-checking and ideas folder review.",
+    summary: "Assess external findings (posts, links, videos, screenshots) ג€” explain in plain language, map to current projects, recommend action (apply now / save / skip). Includes fact-checking and ideas folder review.",
     tags: ["triage", "findings", "links", "telegram", "youtube", "ideas", "project-mapping"],
     recommendedWhen: ["user shares a link or post to evaluate", "triaging Telegram or Reddit findings", "reviewing saved ideas folder"],
     compatibility: ["claude-code"],
@@ -582,4 +600,105 @@ export const SKILL_CATALOG: SkillCatalogEntry[] = [
     evidenceUrls: ["https://github.com/alenazaharovaux/share"],
     localPath: "skills/triage-finding/SKILL.md",
   },
+  {
+    id: "brainstorming",
+    label: "Brainstorming",
+    summary: "Structured idea-to-design workflow. Explores context, proposes 2-3 approaches, presents design sections, writes design doc. Hard gate: no implementation without design sign-off.",
+    tags: ["design", "ideation", "planning", "approval", "gate"],
+    recommendedWhen: ["starting a new feature or project", "exploring design options before coding", "need structured idea exploration"],
+    compatibility: ["codex", "claude-code"],
+    maturity: "adopt-now",
+    sourceClass: "community",
+    sourceUrl: "https://github.com/obra/superpowers",
+    evidenceUrls: ["https://github.com/obra/superpowers", "https://github.com/alenazaharovaux/share"],
+  },
+  {
+    id: "writing-plans",
+    label: "Writing Plans",
+    summary: "Break large work into small verifiable steps with clear done criteria, risks, and checks. Produces sequenced implementation plans.",
+    tags: ["planning", "sequencing", "steps", "verification", "architecture"],
+    recommendedWhen: ["work is large enough to need sequencing", "need verifiable steps with done criteria", "planning multi-step implementation"],
+    compatibility: ["codex", "claude-code"],
+    maturity: "adopt-now",
+    sourceClass: "community",
+    sourceUrl: "https://github.com/obra/superpowers",
+    evidenceUrls: ["https://github.com/obra/superpowers"],
+  },
+  {
+    id: "executing-plans",
+    label: "Executing Plans",
+    summary: "Execute implementation plans one step at a time. Verify each step before proceeding. Replan when evidence changes.",
+    tags: ["execution", "plans", "verification", "step-by-step", "replan"],
+    recommendedWhen: ["a plan exists and needs execution", "implementing step-by-step with verification", "need disciplined plan execution"],
+    compatibility: ["codex", "claude-code"],
+    maturity: "adopt-now",
+    sourceClass: "community",
+    sourceUrl: "https://github.com/obra/superpowers",
+    evidenceUrls: ["https://github.com/obra/superpowers"],
+  },
+  {
+    id: "adr",
+    label: "Architecture Decision Records",
+    summary: "Log architecture decisions (what, why, what was rejected) in one Markdown file per project. ~1 min per entry. Includes retroactive and draft modes.",
+    tags: ["architecture", "decisions", "documentation", "adr", "context", "dotnotes"],
+    recommendedWhen: ["making a decision you need to remember in 6 months", "documenting why a specific approach was chosen", "onboarding new contributors who need architectural context"],
+    compatibility: ["claude-code"],
+    maturity: "watch",
+    sourceClass: "community",
+    sourceUrl: "https://github.com/alenazaharovaux/share/tree/main/skills/adr",
+    evidenceUrls: ["https://github.com/alenazaharovaux/share", "OpenAI Build Hour 2026-03 (Basis dotnotes pattern)"],
+  },
+  {
+    id: "agent-legibility-scorecard",
+    label: "Agent Legibility Scorecard",
+    summary: "Grade how agentic-ready a repository is across 7 dimensions: bootstrap, task entrypoints, validation harness, lint gates, agent repo map, structured docs, decision records.",
+    tags: ["agent-readiness", "repo-scoring", "harness-engineering", "legibility", "evaluation"],
+    recommendedWhen: ["evaluating a new repo for agent workflow adoption", "auditing project setup for agentic readiness", "comparing repos on GitHub watchlist"],
+    compatibility: ["codex", "claude-code"],
+    maturity: "experiment",
+    sourceClass: "community",
+    sourceUrl: "https://openai.com/index/harness-engineering/",
+    evidenceUrls: [
+      "https://openai.com/index/harness-engineering/",
+      "https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals",
+      "https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/",
+      "https://arxiv.org/html/2602.11988v1",
+      "https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html",
+    ],
+  },
+  {
+    id: "archgate-cli",
+    label: "Archgate CLI",
+    summary: "Executable architecture decision records with .rules.ts companions. Runs in CI, pre-commit hooks, and exposes an MCP server for agents to read ADRs before writing code. Has Claude Code plugin.",
+    tags: ["adr", "architecture", "linting", "mcp", "ci", "harness-engineering"],
+    recommendedWhen: ["enforcing architectural rules mechanically", "giving agents access to ADRs via MCP", "automating architecture compliance in CI"],
+    compatibility: ["codex", "claude-code"],
+    maturity: "experiment",
+    sourceClass: "community",
+    sourceUrl: "https://github.com/archgate/cli",
+    evidenceUrls: [
+      "https://github.com/archgate/cli",
+      "https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html",
+    ],
+  },
+  {
+    id: "agent-decision-record",
+    label: "Agent Decision Record (AgDR)",
+    summary: "Structured decision log format extending ADR for AI agent decisions. Addresses invisible decisions, lost context, and unauditable PRs from agent-generated code.",
+    tags: ["adr", "decisions", "audit", "dotnotes", "agent-transparency"],
+    recommendedWhen: ["tracking non-obvious agent decisions", "auditing agent-generated PRs", "building reasoning trails for agent sessions"],
+    compatibility: ["codex", "claude-code"],
+    maturity: "watch",
+    sourceClass: "community",
+    sourceUrl: "https://github.com/me2resh/agent-decision-record",
+    evidenceUrls: [
+      "https://github.com/me2resh/agent-decision-record",
+      "https://openai.com/index/harness-engineering/",
+    ],
+  },
 ];
+
+
+
+
+

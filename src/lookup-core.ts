@@ -179,8 +179,14 @@ function scoreCatalogEntry(entry: SkillCatalogEntry, query: string, tokens: stri
   if (entry.maturity === "adopt-now") {
     score += 8;
     reasons.push("adopt-now");
+  } else if (entry.maturity === "experiment") {
+    score += 5;
+    reasons.push("experiment");
   } else if (entry.maturity === "watch") {
     score += 3;
+  } else if (entry.maturity === "reject") {
+    score -= 10;
+    reasons.push("rejected");
   }
 
   if (entry.sourceClass === "project-owned") {

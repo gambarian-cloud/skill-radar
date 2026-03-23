@@ -156,4 +156,14 @@ export const GITHUB_AGENT_WATCHLIST: GitHubRepoTarget[] = [
     repo: "mcp-n8n-workflow-builder",
     label: "n8n Workflow Builder",
   },
+  {
+    owner: "archgate",
+    repo: "cli",
+    label: "Archgate CLI (Executable ADRs)",
+  },
+  {
+    owner: "me2resh",
+    repo: "agent-decision-record",
+    label: "Agent Decision Record (AgDR)",
+  },
 ];
