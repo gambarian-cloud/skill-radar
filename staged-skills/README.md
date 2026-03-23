@@ -26,6 +26,28 @@ Public Starter Pack baseline still lives in the standalone repo:
 
 ## Current staged items
 
+### `biomedical-knowledge-base-pack`
+
+Status:
+
+- `staged`
+- internal
+- optional high-stakes add-on pack
+- not in public Starter Pack default
+
+What it contains:
+
+- clinical reasoning skills
+- evidence appraisal skills
+- trial-quality and validation-reading skills
+- biomedical research-methodology skills
+
+Why staged instead of public default:
+
+- this is a real domain pack, not a general beginner baseline
+- it is useful for patient-specific medical knowledge workflows, but too specialized and high-stakes for one-button public install
+- it should stay as an intentional add-on until we define a clearer medical install policy and stronger warning boundaries
+
 ### `hebrew-medical-pdf-to-markdown`
 
 Status:
