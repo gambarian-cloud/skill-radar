@@ -149,6 +149,8 @@ Do not turn this into a full repo audit. The goal is to align the research to pr
 
 ## Workflow
 
+Backbone principle: **discovery → classification → decision.** First find what exists. Then type and classify each candidate. Only then shortlist and decide. The classification step is the one most often skipped under pressure — do not skip it.
+
 0. Run an optional framing preflight when the path is unclear.
 
 Use this only when the user knows the goal but the research framing is still fuzzy. Skip it when the question is already well locked.
@@ -213,6 +215,7 @@ Default to `landscape first` when the user asks what exists, what we missed, or 
 Before browsing anything:
 
 - break the question into 3-7 sub-questions that together cover the full decision
+- at least one sub-question must be adversarial: "what would make this fail?", "why does X not work in practice?", or "what are the known failure modes?" Do not treat this as optional or deferrable.
 - for each sub-question, draft 2-4 search queries across different source classes (official, implementation, field/social, adversarial)
 - this produces a query pack of 10-25 planned searches; not all must run, but the plan must exist before the first search
 - for `long-run`, write the query pack to `02_queries.md`
@@ -271,6 +274,16 @@ If the pass is about skills, agents, or domain ecosystems, also classify each op
 
 Do this classification before ranking practical usefulness. A platform, skill pack, and backend library are not interchangeable findings.
 
+### Candidate typing gate
+
+This is a hard gate. Do not proceed to shortlisting or ranking until every serious candidate has a type assigned from the classification above.
+
+- No shortlist before candidate typing.
+- No ranking before category assignment.
+- No "best option" until entity types are separated.
+
+If a candidate does not fit any existing type, create a new type and log it. Do not force-fit candidates into wrong categories to move faster.
+
 ### Candidate reality check
 
 Before proceeding to evidence gathering, verify for each candidate:
@@ -302,6 +315,10 @@ Prefer:
 
 Do not inflate source count with repeats. Two strong sources beat ten paraphrases.
 
+When designing a workflow, protocol, or skill, check known skill ecosystems before building from scratch. If the project has a skill catalog, watchlist, or known ecosystem list, search it first. A ready-made skill or tool in a known ecosystem is stronger evidence than a design invented from first principles.
+
+For decision-bearing conclusions, read at least 3-5 key sources in full when available. Do not rely only on search snippets, summaries, or extracted passages. Snippets are leads for discovery; decisive claims must come from full-text reading.
+
 For hardware, tool, or workflow comparisons: require at least one concrete practitioner setup description in `deep` and at least two in `long-run` when the ecosystem is active. A concrete setup means a specific person's actual hardware model, software stack, and workflow with enough detail to reproduce or evaluate. Forum threads, build logs, and "share your setup" posts are the strongest form of this evidence. If no concrete practitioner setup is found, log it as a critical coverage gap.
 
 For enterprise, privacy, compliance, or procurement questions: run a dedicated contract-and-policy pass before treating the official baseline as complete. Read the DPA, ToS, privacy/retention docs, abuse-monitoring docs, and any security or enterprise addenda you can access for each serious option.
@@ -325,6 +342,18 @@ After the official and implementation lanes, run a dedicated community and pract
 
 This is a separate pass from blog-based field evidence. Platform-native artifacts often reveal workflow patterns that blogs miss.
 
+4.5. Run conditional ecosystem passes when the question is a domain or ecosystem scan.
+
+For domain ecosystem scans and landscape-first passes, the distribution and domain-native query passes are required. The enterprise/commercial and frontier/preprint passes are conditional. Skip this whole block for standard tool comparisons or single-vendor questions.
+
+**Distribution and installability pass.** Before concluding that something "exists," check where it actually ships. See [references/distribution-registries.md](references/distribution-registries.md) for the checklist.
+
+**Domain-native query pass.** Search using the domain's own vocabulary, not just "agent" / "skill" / "copilot." See [references/domain-ecosystem-scans.md](references/domain-ecosystem-scans.md) for guidance.
+
+**Enterprise and commercial pass** (conditional). When the question is about ecosystem shape, market landscape, or "what exists," check the enterprise/commercial layer. Vendor pages, press releases, analyst reports, institutional deployments. See [references/domain-ecosystem-scans.md](references/domain-ecosystem-scans.md).
+
+**Frontier and preprint pass** (conditional, research-heavy domains only). When the domain is research-active (biomedical, ML, scientific computing), check arXiv, bioRxiv, medRxiv, conference proceedings, and supplementary code. See [references/domain-ecosystem-scans.md](references/domain-ecosystem-scans.md).
+
 5. Extract evidence, not vibes.
 
 For every important claim, record:
@@ -335,11 +364,19 @@ For every important claim, record:
 - why the source is credible or limited
 - whether the claim is `verified`, `partially verified`, `unverified`, or `marketing only`
 
-6. Chase contradictions and map them to decisions.
+6. Chase contradictions and run adversarial falsification. This step is mandatory, not optional.
 
 - go closer to the primary artifact
 - prefer newer evidence when the topic is time-sensitive
 - if conflict remains, keep both sides and state the uncertainty
+
+After collecting evidence, run a dedicated adversarial search pass for each key design decision or recommendation. Search explicitly for:
+- "why X fails in practice"
+- "X problems", "X merge conflicts", "X protocol fatigue"
+- real-world failure case studies, not just theoretical objections
+- compliance decay and ceremony fatigue when the recommendation involves multi-step protocols
+
+This is not the same as checking for "other opinions." It is a targeted search for failure modes of the thing you are about to recommend. If you cannot find failure evidence, log it as a coverage gap, not as proof that there are no failures.
 
 Every contradiction must resolve to a decision impact, not just exist in a log:
 
@@ -393,6 +430,7 @@ Use:
 - `Decision / Outcome`
 - `Recommended Next Move`
 - `Best Argument Against This Recommendation`
+- `What Should Be Removed Or Simplified` — when the recommendation involves a protocol or multi-step design, explicitly ask: is this too heavy for v1? What can be cut without losing core value? What will die from ceremony fatigue?
 - `Source Layer Coverage`
 - `Biggest Blind Spot / Missed Signals`
 
